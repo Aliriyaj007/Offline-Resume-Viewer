@@ -3,224 +3,358 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Offline-first resume viewer - see how recruiters read your resume instantly">
+    <meta name="description" content="Offline Resume Viewer - See how your resume actually reads, instantly, without uploading anywhere">
     <title>Offline Resume Viewer</title>
     
     <style>
-        /* ===== CSS RESET & BASE ===== */
+        /* ============================================
+           CSS CUSTOM PROPERTIES & THEMES
+           ============================================ */
+        :root {
+            /* Base sizing */
+            --max-width: 1400px;
+            --header-height: 70px;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+            --transition: 0.2s ease;
+            
+            /* Typography */
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+        }
+
+        /* Light Theme (Default) */
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --accent-primary: #2563eb;
+            --accent-secondary: #3b82f6;
+            --accent-light: #dbeafe;
+            --weak-phrase-bg: #fef2f2;
+            --weak-phrase-border: #fecaca;
+            --weak-phrase-text: #dc2626;
+            --success: #16a34a;
+            --warning: #ca8a04;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #334155;
+            --accent-primary: #60a5fa;
+            --accent-secondary: #3b82f6;
+            --accent-light: #1e3a5f;
+            --weak-phrase-bg: #450a0a;
+            --weak-phrase-border: #7f1d1d;
+            --weak-phrase-text: #fca5a5;
+            --success: #4ade80;
+            --warning: #fbbf24;
+        }
+
+        /* Sepia Theme */
+        [data-theme="sepia"] {
+            --bg-primary: #fefbf3;
+            --bg-secondary: #fef3c7;
+            --bg-tertiary: #fde68a;
+            --text-primary: #451a03;
+            --text-secondary: #78350f;
+            --text-muted: #a16207;
+            --border-color: #fcd34d;
+            --accent-primary: #b45309;
+            --accent-secondary: #d97706;
+            --accent-light: #fef3c7;
+            --weak-phrase-bg: #fef2f2;
+            --weak-phrase-border: #fecaca;
+            --weak-phrase-text: #dc2626;
+            --success: #15803d;
+            --warning: #a16207;
+        }
+
+        /* Ocean Theme */
+        [data-theme="ocean"] {
+            --bg-primary: #f0fdfa;
+            --bg-secondary: #ccfbf1;
+            --bg-tertiary: #99f6e4;
+            --text-primary: #134e4a;
+            --text-secondary: #115e59;
+            --text-muted: #0d9488;
+            --border-color: #5eead4;
+            --accent-primary: #0891b2;
+            --accent-secondary: #06b6d4;
+            --accent-light: #cffafe;
+            --weak-phrase-bg: #fef2f2;
+            --weak-phrase-border: #fecaca;
+            --weak-phrase-text: #dc2626;
+            --success: #059669;
+            --warning: #d97706;
+        }
+
+        /* Forest Theme */
+        [data-theme="forest"] {
+            --bg-primary: #f0fdf4;
+            --bg-secondary: #dcfce7;
+            --bg-tertiary: #bbf7d0;
+            --text-primary: #14532d;
+            --text-secondary: #166534;
+            --text-muted: #16a34a;
+            --border-color: #86efac;
+            --accent-primary: #15803d;
+            --accent-secondary: #22c55e;
+            --accent-light: #dcfce7;
+            --weak-phrase-bg: #fef2f2;
+            --weak-phrase-border: #fecaca;
+            --weak-phrase-text: #dc2626;
+            --success: #059669;
+            --warning: #ca8a04;
+        }
+
+        /* Slate Theme */
+        [data-theme="slate"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #e2e8f0;
+            --bg-tertiary: #cbd5e1;
+            --text-primary: #1e293b;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border-color: #94a3b8;
+            --accent-primary: #475569;
+            --accent-secondary: #64748b;
+            --accent-light: #e2e8f0;
+            --weak-phrase-bg: #fef2f2;
+            --weak-phrase-border: #fecaca;
+            --weak-phrase-text: #dc2626;
+            --success: #16a34a;
+            --warning: #ca8a04;
+        }
+
+        /* Midnight Theme */
+        [data-theme="midnight"] {
+            --bg-primary: #1e1b4b;
+            --bg-secondary: #312e81;
+            --bg-tertiary: #4338ca;
+            --text-primary: #e0e7ff;
+            --text-secondary: #c7d2fe;
+            --text-muted: #a5b4fc;
+            --border-color: #4338ca;
+            --accent-primary: #818cf8;
+            --accent-secondary: #a5b4fc;
+            --accent-light: #312e81;
+            --weak-phrase-bg: #450a0a;
+            --weak-phrase-border: #7f1d1d;
+            --weak-phrase-text: #fca5a5;
+            --success: #4ade80;
+            --warning: #fbbf24;
+        }
+
+        /* Paper Theme */
+        [data-theme="paper"] {
+            --bg-primary: #fffbeb;
+            --bg-secondary: #fef3c7;
+            --bg-tertiary: #fde68a;
+            --text-primary: #1c1917;
+            --text-secondary: #44403c;
+            --text-muted: #78716c;
+            --border-color: #d6d3d1;
+            --accent-primary: #854d0e;
+            --accent-secondary: #a16207;
+            --accent-light: #fef3c7;
+            --weak-phrase-bg: #fef2f2;
+            --weak-phrase-border: #fecaca;
+            --weak-phrase-text: #dc2626;
+            --success: #16a34a;
+            --warning: #ca8a04;
+        }
+
+        /* ============================================
+           BASE STYLES
+           ============================================ */
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        /* ===== THEME VARIABLES ===== */
-        :root {
-            /* Light Theme (Default) */
-            --bg-primary: #f8f9fa;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #e9ecef;
-            --text-primary: #212529;
-            --text-secondary: #495057;
-            --text-muted: #6c757d;
-            --accent: #4361ee;
-            --accent-hover: #3651d4;
-            --border: #dee2e6;
-            --shadow: rgba(0, 0, 0, 0.08);
-            --highlight-weak: #fff3cd;
-            --highlight-weak-text: #856404;
-            --success: #28a745;
-            --section-header: #4361ee;
-            --preview-bg: #ffffff;
-            --input-bg: #ffffff;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-tertiary: #0f3460;
-            --text-primary: #eaeaea;
-            --text-secondary: #b8b8b8;
-            --text-muted: #888888;
-            --accent: #4cc9f0;
-            --accent-hover: #72d4f5;
-            --border: #2a2a4a;
-            --shadow: rgba(0, 0, 0, 0.3);
-            --highlight-weak: #4a3f00;
-            --highlight-weak-text: #ffc107;
-            --success: #4ade80;
-            --section-header: #4cc9f0;
-            --preview-bg: #16213e;
-            --input-bg: #0f3460;
-        }
-
-        [data-theme="sepia"] {
-            --bg-primary: #f4ecd8;
-            --bg-secondary: #faf6eb;
-            --bg-tertiary: #e8e0cc;
-            --text-primary: #433422;
-            --text-secondary: #5d4e37;
-            --text-muted: #7a6b57;
-            --accent: #8b4513;
-            --accent-hover: #a0522d;
-            --border: #d4c8b0;
-            --shadow: rgba(67, 52, 34, 0.1);
-            --highlight-weak: #ffe4b5;
-            --highlight-weak-text: #8b4513;
-            --success: #6b8e23;
-            --section-header: #8b4513;
-            --preview-bg: #faf6eb;
-            --input-bg: #faf6eb;
-        }
-
-        [data-theme="ocean"] {
-            --bg-primary: #e3f2fd;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #bbdefb;
-            --text-primary: #0d47a1;
-            --text-secondary: #1565c0;
-            --text-muted: #1976d2;
-            --accent: #0277bd;
-            --accent-hover: #01579b;
-            --border: #90caf9;
-            --shadow: rgba(13, 71, 161, 0.1);
-            --highlight-weak: #fff9c4;
-            --highlight-weak-text: #f57f17;
-            --success: #00897b;
-            --section-header: #0277bd;
-            --preview-bg: #ffffff;
-            --input-bg: #ffffff;
-        }
-
-        [data-theme="forest"] {
-            --bg-primary: #e8f5e9;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #c8e6c9;
-            --text-primary: #1b5e20;
-            --text-secondary: #2e7d32;
-            --text-muted: #388e3c;
-            --accent: #2e7d32;
-            --accent-hover: #1b5e20;
-            --border: #a5d6a7;
-            --shadow: rgba(27, 94, 32, 0.1);
-            --highlight-weak: #fff8e1;
-            --highlight-weak-text: #ff8f00;
-            --success: #43a047;
-            --section-header: #2e7d32;
-            --preview-bg: #ffffff;
-            --input-bg: #ffffff;
-        }
-
-        [data-theme="lavender"] {
-            --bg-primary: #f3e5f5;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #e1bee7;
-            --text-primary: #4a148c;
-            --text-secondary: #6a1b9a;
-            --text-muted: #7b1fa2;
-            --accent: #7b1fa2;
-            --accent-hover: #6a1b9a;
-            --border: #ce93d8;
-            --shadow: rgba(74, 20, 140, 0.1);
-            --highlight-weak: #fff3e0;
-            --highlight-weak-text: #e65100;
-            --success: #66bb6a;
-            --section-header: #7b1fa2;
-            --preview-bg: #ffffff;
-            --input-bg: #ffffff;
-        }
-
-        [data-theme="midnight"] {
-            --bg-primary: #0a0a1a;
-            --bg-secondary: #12122a;
-            --bg-tertiary: #1a1a3a;
-            --text-primary: #e0e0ff;
-            --text-secondary: #b0b0d0;
-            --text-muted: #8080a0;
-            --accent: #7c3aed;
-            --accent-hover: #8b5cf6;
-            --border: #2a2a4a;
-            --shadow: rgba(0, 0, 0, 0.4);
-            --highlight-weak: #3d2800;
-            --highlight-weak-text: #fbbf24;
-            --success: #34d399;
-            --section-header: #a78bfa;
-            --preview-bg: #12122a;
-            --input-bg: #1a1a3a;
-        }
-
-        [data-theme="contrast"] {
-            --bg-primary: #000000;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #e0e0e0;
-            --text-primary: #000000;
-            --text-secondary: #222222;
-            --text-muted: #444444;
-            --accent: #0000ff;
-            --accent-hover: #0000cc;
-            --border: #000000;
-            --shadow: rgba(0, 0, 0, 0.2);
-            --highlight-weak: #ffff00;
-            --highlight-weak-text: #000000;
-            --success: #008000;
-            --section-header: #0000ff;
-            --preview-bg: #ffffff;
-            --input-bg: #ffffff;
-        }
-
-        /* ===== BASE STYLES ===== */
         html {
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--bg-primary);
+            font-family: var(--font-sans);
+            background: var(--bg-secondary);
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background var(--transition), color var(--transition);
         }
 
-        /* ===== HEADER ===== */
-        .hero-header {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            padding: 1.5rem 2rem;
-            text-align: center;
-            box-shadow: 0 2px 10px var(--shadow);
+        /* ============================================
+           HEADER
+           ============================================ */
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background var(--transition), border var(--transition);
         }
 
-        .hero-header h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
+        .header-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            font-size: 1.25rem;
         }
 
-        .hero-header h1 .icon {
-            font-size: 1.5rem;
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
         }
 
-        .hero-header p {
+        .logo-text p {
+            font-size: 0.75rem;
             color: var(--text-muted);
-            font-size: 0.95rem;
+            line-height: 1.3;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Theme Selector */
+        .theme-selector {
+            position: relative;
+        }
+
+        .theme-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .theme-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition);
+            z-index: 200;
+        }
+
+        .theme-dropdown.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .theme-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+
+        .theme-option:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .theme-option.active {
+            background: var(--accent-light);
+        }
+
+        .theme-option:first-child {
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+        }
+
+        .theme-option:last-child {
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+        }
+
+        .theme-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+        }
+
+        .theme-name {
+            font-size: 0.875rem;
+            color: var(--text-primary);
         }
 
         .offline-badge {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 0.35rem;
-            background: var(--bg-tertiary);
-            padding: 0.25rem 0.75rem;
-            border-radius: 2rem;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--accent-light);
+            border-radius: 50px;
             font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.5rem;
+            font-weight: 600;
+            color: var(--accent-primary);
         }
 
         .offline-badge::before {
@@ -231,277 +365,374 @@
             border-radius: 50%;
         }
 
-        /* ===== MAIN CONTAINER ===== */
-        .main-container {
-            max-width: 1400px;
+        /* ============================================
+           MAIN CONTENT
+           ============================================ */
+        .main-content {
+            max-width: var(--max-width);
             margin: 0 auto;
-            padding: 1.5rem;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Editor Layout */
+        .editor-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
-            min-height: calc(100vh - 200px);
+            margin-bottom: 2rem;
         }
 
-        @media (max-width: 900px) {
-            .main-container {
+        @media (max-width: 1024px) {
+            .editor-layout {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* ===== PANELS ===== */
         .panel {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 20px var(--shadow);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            transition: all var(--transition);
         }
 
         .panel-header {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-tertiary);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-secondary);
         }
 
         .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9375rem;
             font-weight: 600;
-            font-size: 0.95rem;
             color: var(--text-primary);
+        }
+
+        .panel-title-icon {
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
+            justify-content: center;
+            color: var(--accent-primary);
+        }
+
+        .panel-actions {
+            display: flex;
             gap: 0.5rem;
         }
 
-        .panel-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .panel-body {
-            flex: 1;
-            overflow: auto;
-            padding: 1rem;
-        }
-
-        /* ===== BUTTONS ===== */
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-            padding: 0.5rem 0.85rem;
-            font-size: 0.8rem;
+            gap: 0.375rem;
+            padding: 0.5rem 0.875rem;
+            font-size: 0.8125rem;
             font-weight: 500;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all var(--transition);
+            border: none;
             font-family: inherit;
-        }
-
-        .btn:hover {
-            background: var(--bg-tertiary);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            color: white;
         }
 
         .btn-icon {
-            padding: 0.5rem;
+            width: 16px;
+            height: 16px;
         }
 
-        /* ===== TEXTAREA ===== */
-        .resume-input {
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 0.375rem 0.5rem;
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Textarea */
+        .input-panel .panel-body {
+            padding: 0;
+        }
+
+        #resume-input {
             width: 100%;
-            height: 100%;
-            min-height: 400px;
-            padding: 1rem;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+            min-height: 500px;
+            padding: 1.25rem;
+            border: none;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
             font-size: 0.875rem;
             line-height: 1.7;
-            border: none;
-            background: var(--input-bg);
-            color: var(--text-primary);
-            resize: none;
+            resize: vertical;
+            transition: all var(--transition);
+        }
+
+        #resume-input:focus {
             outline: none;
         }
 
-        .resume-input::placeholder {
+        #resume-input::placeholder {
             color: var(--text-muted);
         }
 
-        /* ===== SELECT ===== */
-        .theme-select {
-            padding: 0.5rem 0.75rem;
-            font-size: 0.8rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
+        /* Character Count */
+        .input-footer {
+            padding: 0.75rem 1.25rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             background: var(--bg-secondary);
+        }
+
+        .char-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .save-status {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            color: var(--success);
+        }
+
+        .save-status::before {
+            content: '✓';
+        }
+
+        /* Preview Panel */
+        .preview-panel .panel-body {
+            padding: 1.5rem;
+            min-height: 500px;
+            overflow-y: auto;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            padding: 2px;
+        }
+
+        .view-toggle-btn {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: none;
+            background: transparent;
             color: var(--text-secondary);
+            border-radius: 4px;
             cursor: pointer;
-            font-family: inherit;
-            outline: none;
+            transition: all var(--transition);
         }
 
-        .theme-select:focus {
-            border-color: var(--accent);
+        .view-toggle-btn.active {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
         }
 
-        /* ===== PREVIEW PANE ===== */
-        .preview-pane {
-            background: var(--preview-bg);
+        /* Resume Preview Styles */
+        .resume-preview {
             color: var(--text-primary);
         }
 
-        .preview-pane.raw-view {
-            white-space: pre-wrap;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+        .resume-preview.raw-view {
+            font-family: var(--font-mono);
             font-size: 0.875rem;
+            white-space: pre-wrap;
+            color: var(--text-secondary);
         }
 
-        /* Resume Sections */
+        .resume-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
+        }
+
+        .resume-contact {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1rem;
+        }
+
+        .resume-contact a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .resume-contact a:hover {
+            text-decoration: underline;
+        }
+
         .resume-section {
             margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
         }
 
-        .resume-section:last-child {
-            border-bottom: none;
+        .resume-section-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-primary);
+            margin-bottom: 0.875rem;
+        }
+
+        .resume-section-content {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .resume-section-content p {
+            margin-bottom: 0.75rem;
+        }
+
+        .resume-section-content p:last-child {
             margin-bottom: 0;
         }
 
-        .section-header {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--section-header);
-            margin-bottom: 0.75rem;
-            padding-bottom: 0.35rem;
-            border-bottom: 2px solid var(--section-header);
-            display: inline-block;
+        .resume-entry {
+            margin-bottom: 1.25rem;
         }
 
-        .section-content {
-            font-size: 0.9rem;
-            line-height: 1.7;
+        .resume-entry:last-child {
+            margin-bottom: 0;
+        }
+
+        .resume-entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.375rem;
+        }
+
+        .resume-entry-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .resume-entry-date {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .resume-entry-subtitle {
+            font-size: 0.875rem;
             color: var(--text-secondary);
-        }
-
-        .section-content p {
             margin-bottom: 0.5rem;
         }
 
-        .section-content ul {
-            margin: 0.5rem 0;
-            padding-left: 1.25rem;
+        .resume-entry-content ul {
+            list-style: none;
+            padding-left: 0;
         }
 
-        .section-content li {
-            margin-bottom: 0.35rem;
-        }
-
-        .experience-item, .education-item {
-            margin-bottom: 1rem;
-        }
-
-        .item-header {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .item-subheader {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 0.35rem;
-        }
-
-        /* Weak Phrase Highlight */
-        .weak-phrase {
-            background: var(--highlight-weak);
-            color: var(--highlight-weak-text);
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-            cursor: help;
+        .resume-entry-content li {
             position: relative;
+            padding-left: 1.25rem;
+            margin-bottom: 0.375rem;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
         }
 
-        .weak-phrase::after {
-            content: attr(data-tip);
+        .resume-entry-content li::before {
+            content: '•';
             position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--text-primary);
-            color: var(--bg-secondary);
-            padding: 0.35rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-            z-index: 10;
+            left: 0;
+            color: var(--accent-primary);
+            font-weight: bold;
         }
 
-        .weak-phrase:hover::after {
-            opacity: 1;
-        }
-
-        /* Skills Tags */
-        .skills-container {
+        .skills-list {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
 
         .skill-tag {
-            background: var(--bg-tertiary);
-            padding: 0.35rem 0.65rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--accent-light);
+            color: var(--accent-primary);
+            border-radius: 50px;
+            font-size: 0.8125rem;
+            font-weight: 500;
         }
 
-        /* Contact Info */
-        .contact-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            font-size: 0.85rem;
+        /* Weak Phrase Highlight */
+        .weak-phrase {
+            background: var(--weak-phrase-bg);
+            border: 1px solid var(--weak-phrase-border);
+            color: var(--weak-phrase-text);
+            padding: 0 0.25rem;
+            border-radius: 3px;
+            cursor: help;
+            position: relative;
         }
 
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            color: var(--text-muted);
+        .weak-phrase::after {
+            content: attr(data-suggestion);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition);
+            z-index: 10;
+        }
+
+        .weak-phrase:hover::after {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Empty State */
@@ -510,10 +741,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100%;
+            min-height: 400px;
             text-align: center;
             color: var(--text-muted);
-            padding: 2rem;
         }
 
         .empty-state-icon {
@@ -522,604 +752,737 @@
             opacity: 0.5;
         }
 
-        .empty-state h3 {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-        }
-
-        .empty-state p {
-            font-size: 0.9rem;
-        }
-
-        /* ===== TIPS SECTION ===== */
-        .tips-section {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 1.5rem 1.5rem;
-        }
-
-        .tips-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px var(--shadow);
-        }
-
-        .tips-title {
-            font-size: 1rem;
+        .empty-state-title {
+            font-size: 1.125rem;
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .tips-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-
-        .tip-item {
-            display: flex;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-        }
-
-        .tip-number {
-            width: 24px;
-            height: 24px;
-            background: var(--accent);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .tip-content {
-            font-size: 0.85rem;
             color: var(--text-secondary);
+            margin-bottom: 0.5rem;
         }
 
-        .tip-content strong {
-            color: var(--text-primary);
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            text-align: center;
-            padding: 1.5rem;
-            border-top: 1px solid var(--border);
-            background: var(--bg-secondary);
-            color: var(--text-muted);
+        .empty-state-text {
             font-size: 0.875rem;
+            max-width: 280px;
         }
 
-        .footer a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* ===== LEGEND ===== */
+        /* Legend */
         .legend {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.75rem 1rem;
-            background: var(--bg-tertiary);
-            border-top: 1px solid var(--border);
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .legend-title {
             font-size: 0.75rem;
+            font-weight: 600;
             color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .legend-items {
+            display: flex;
             flex-wrap: wrap;
+            gap: 0.75rem;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
         }
 
-        .legend-color {
-            width: 14px;
-            height: 14px;
+        .legend-swatch {
+            width: 12px;
+            height: 12px;
             border-radius: 3px;
         }
 
-        .legend-color.weak {
-            background: var(--highlight-weak);
-            border: 1px solid var(--highlight-weak-text);
+        .legend-swatch.weak {
+            background: var(--weak-phrase-bg);
+            border: 1px solid var(--weak-phrase-border);
         }
 
-        /* ===== TOGGLE SWITCH ===== */
-        .view-toggle {
+        /* ============================================
+           TIPS SECTION
+           ============================================ */
+        .tips-section {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .tips-header {
             display: flex;
-            background: var(--bg-tertiary);
-            border-radius: 6px;
-            padding: 2px;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
         }
 
-        .view-toggle-btn {
-            padding: 0.4rem 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-            font-family: inherit;
+        .tips-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-light);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
         }
 
-        .view-toggle-btn.active {
-            background: var(--bg-secondary);
+        .tips-title {
+            font-size: 1.125rem;
+            font-weight: 700;
             color: var(--text-primary);
-            box-shadow: 0 1px 3px var(--shadow);
         }
 
-        /* ===== FILE INPUT ===== */
+        .tips-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .tip-card {
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .tip-card h4 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tip-card p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .footer-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-heart {
+            color: #ef4444;
+        }
+
+        .footer-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           FILE INPUT (Hidden)
+           ============================================ */
         .file-input {
             display: none;
         }
 
-        /* ===== STATS BAR ===== */
-        .stats-bar {
+        /* ============================================
+           TOAST NOTIFICATIONS
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
             display: flex;
-            gap: 1rem;
-            padding: 0.5rem 1rem;
-            background: var(--bg-tertiary);
-            border-top: 1px solid var(--border);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
-        .stat-item {
+        .toast {
             display: flex;
             align-items: center;
-            gap: 0.25rem;
-        }
-
-        .stat-value {
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        /* ===== TOAST NOTIFICATIONS ===== */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
+            gap: 0.75rem;
+            padding: 0.875rem 1.25rem;
             background: var(--text-primary);
-            color: var(--bg-secondary);
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            color: var(--bg-primary);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
             font-size: 0.875rem;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            box-shadow: 0 4px 20px var(--shadow);
+            animation: slideIn 0.2s ease;
         }
 
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* ===== PRINT STYLES ===== */
-        @media print {
-            body {
-                background: white;
-                color: black;
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
             }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
 
-            .hero-header,
+        .toast.success {
+            background: #059669;
+            color: white;
+        }
+
+        .toast.error {
+            background: #dc2626;
+            color: white;
+        }
+
+        /* ============================================
+           PRINT STYLES
+           ============================================ */
+        @media print {
+            .header,
             .input-panel,
             .tips-section,
             .footer,
             .panel-header,
             .legend,
-            .stats-bar,
-            .toast {
+            .toast-container {
                 display: none !important;
             }
 
-            .main-container {
-                display: block;
+            body {
+                background: white;
+                color: black;
+            }
+
+            .main-content {
                 padding: 0;
                 max-width: 100%;
             }
 
-            .preview-panel {
-                box-shadow: none;
-                border: none;
+            .editor-layout {
+                display: block;
             }
 
-            .panel-body {
+            .preview-panel {
+                border: none;
+                box-shadow: none;
+            }
+
+            .preview-panel .panel-body {
                 padding: 0;
             }
 
-            .resume-section {
-                break-inside: avoid;
+            .resume-preview {
+                color: black !important;
             }
 
-            .section-header {
+            .resume-section-title {
                 color: black !important;
                 border-color: black !important;
             }
 
             .weak-phrase {
-                background: #ffff00 !important;
-                color: black !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
+                background: #fff3cd !important;
+                border-color: #ffc107 !important;
+                color: #856404 !important;
             }
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 600px) {
-            .hero-header {
-                padding: 1rem;
+        /* ============================================
+           RESPONSIVE ADJUSTMENTS
+           ============================================ */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
             }
 
-            .hero-header h1 {
-                font-size: 1.35rem;
+            .logo-section {
+                justify-content: center;
             }
 
-            .main-container {
-                padding: 1rem;
-                gap: 1rem;
+            .header-actions {
+                justify-content: center;
             }
 
             .panel-header {
-                padding: 0.75rem;
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: stretch;
             }
 
-            .panel-controls {
-                width: 100%;
-                justify-content: space-between;
+            .panel-actions {
+                justify-content: center;
+                flex-wrap: wrap;
             }
 
             .tips-grid {
                 grid-template-columns: 1fr;
             }
-        }
 
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
+            .resume-entry-header {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
 
-        ::-webkit-scrollbar-track {
-            background: var(--bg-tertiary);
-        }
+            .toast-container {
+                bottom: 16px;
+                right: 16px;
+                left: 16px;
+            }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--text-muted);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
+            .toast {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
-
-    <!-- Hero Header -->
-    <header class="hero-header">
-        <h1>
-            <span class="icon">📄</span>
-            Offline Resume Viewer
-        </h1>
-        <p>See how recruiters actually read your resume — instantly, privately, offline</p>
-        <span class="offline-badge">Works Offline</span>
-    </header>
-
-    <!-- Main Container -->
-    <main class="main-container">
-        <!-- Input Panel -->
-        <section class="panel input-panel">
-            <div class="panel-header">
-                <span class="panel-title">
-                    📝 Paste Your Resume
-                </span>
-                <div class="panel-controls">
-                    <input type="file" id="fileInput" class="file-input" accept=".txt,.md">
-                    <button class="btn" id="importBtn" title="Import text file">
-                        📁 Import
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">📄</div>
+                <div class="logo-text">
+                    <h1>Offline Resume Viewer</h1>
+                    <p>See how your resume actually reads, instantly</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="offline-badge">Offline Ready</div>
+                <div class="theme-selector">
+                    <button class="theme-btn" id="theme-toggle">
+                        <span id="current-theme-icon">☀️</span>
+                        <span id="current-theme-name">Light</span>
+                        <span>▾</span>
                     </button>
-                    <button class="btn" id="exportBtn" title="Export as text file">
-                        💾 Export
-                    </button>
-                    <button class="btn" id="clearBtn" title="Clear content">
-                        🗑️ Clear
-                    </button>
-                </div>
-            </div>
-            <div class="panel-body">
-                <textarea 
-                    id="resumeInput" 
-                    class="resume-input" 
-                    placeholder="Paste your resume text here...
-
-Example format:
-
-JOHN DOE
-john.doe@email.com | (555) 123-4567 | linkedin.com/in/johndoe
-
-SUMMARY
-Experienced software developer with 5+ years...
-
-SKILLS
-JavaScript, Python, React, Node.js, SQL...
-
-EXPERIENCE
-Senior Developer | Tech Company | 2020 - Present
-• Led development of core platform features
-• Reduced load time by 40% through optimization
-
-EDUCATION
-BS Computer Science | State University | 2018"
-                    spellcheck="false"
-                ></textarea>
-            </div>
-            <div class="stats-bar">
-                <span class="stat-item">Words: <span class="stat-value" id="wordCount">0</span></span>
-                <span class="stat-item">Characters: <span class="stat-value" id="charCount">0</span></span>
-                <span class="stat-item">Lines: <span class="stat-value" id="lineCount">0</span></span>
-                <span class="stat-item">Sections: <span class="stat-value" id="sectionCount">0</span></span>
-            </div>
-        </section>
-
-        <!-- Preview Panel -->
-        <section class="panel preview-panel">
-            <div class="panel-header">
-                <span class="panel-title">
-                    👁️ Preview
-                </span>
-                <div class="panel-controls">
-                    <div class="view-toggle">
-                        <button class="view-toggle-btn active" data-view="formatted">Formatted</button>
-                        <button class="view-toggle-btn" data-view="raw">Raw</button>
-                    </div>
-                    <select id="themeSelect" class="theme-select" title="Select theme">
-                        <option value="light">☀️ Light</option>
-                        <option value="dark">🌙 Dark</option>
-                        <option value="sepia">📜 Sepia</option>
-                        <option value="ocean">🌊 Ocean</option>
-                        <option value="forest">🌲 Forest</option>
-                        <option value="lavender">💜 Lavender</option>
-                        <option value="midnight">🌌 Midnight</option>
-                        <option value="contrast">⬛ High Contrast</option>
-                    </select>
-                    <button class="btn" id="printBtn" title="Print resume">
-                        🖨️ Print
-                    </button>
-                </div>
-            </div>
-            <div class="panel-body" id="previewPane">
-                <div class="empty-state">
-                    <div class="empty-state-icon">📋</div>
-                    <h3>No Resume Content</h3>
-                    <p>Paste your resume text on the left to see the preview</p>
-                </div>
-            </div>
-            <div class="legend">
-                <span class="legend-item">
-                    <span class="legend-color weak"></span>
-                    Weak phrase (hover for suggestion)
-                </span>
-            </div>
-        </section>
-    </main>
-
-    <!-- Tips Section -->
-    <section class="tips-section">
-        <div class="tips-card">
-            <h2 class="tips-title">
-                💡 How Recruiters Read Resumes
-            </h2>
-            <div class="tips-grid">
-                <div class="tip-item">
-                    <span class="tip-number">1</span>
-                    <div class="tip-content">
-                        <strong>6-Second Scan:</strong> Recruiters spend ~6 seconds on initial scan. Put key info at the top.
-                    </div>
-                </div>
-                <div class="tip-item">
-                    <span class="tip-number">2</span>
-                    <div class="tip-content">
-                        <strong>F-Pattern Reading:</strong> Eyes move in F-shape. Left side and headers get most attention.
-                    </div>
-                </div>
-                <div class="tip-item">
-                    <span class="tip-number">3</span>
-                    <div class="tip-content">
-                        <strong>Keywords First:</strong> They scan for specific skills and job titles that match the role.
-                    </div>
-                </div>
-                <div class="tip-item">
-                    <span class="tip-number">4</span>
-                    <div class="tip-content">
-                        <strong>Numbers Stand Out:</strong> Quantified achievements (e.g., "increased sales 40%") catch the eye.
-                    </div>
-                </div>
-                <div class="tip-item">
-                    <span class="tip-number">5</span>
-                    <div class="tip-content">
-                        <strong>Avoid Weak Phrases:</strong> Words like "responsible for" or "worked on" are passive and vague.
-                    </div>
-                </div>
-                <div class="tip-item">
-                    <span class="tip-number">6</span>
-                    <div class="tip-content">
-                        <strong>White Space Matters:</strong> Clean formatting and spacing improves readability significantly.
+                    <div class="theme-dropdown" id="theme-dropdown">
+                        <div class="theme-option" data-theme="light">
+                            <span class="theme-swatch" style="background: #ffffff; border-color: #e2e8f0;"></span>
+                            <span class="theme-name">Light</span>
+                        </div>
+                        <div class="theme-option" data-theme="dark">
+                            <span class="theme-swatch" style="background: #0f172a;"></span>
+                            <span class="theme-name">Dark</span>
+                        </div>
+                        <div class="theme-option" data-theme="sepia">
+                            <span class="theme-swatch" style="background: #fef3c7;"></span>
+                            <span class="theme-name">Sepia</span>
+                        </div>
+                        <div class="theme-option" data-theme="ocean">
+                            <span class="theme-swatch" style="background: #ccfbf1;"></span>
+                            <span class="theme-name">Ocean</span>
+                        </div>
+                        <div class="theme-option" data-theme="forest">
+                            <span class="theme-swatch" style="background: #dcfce7;"></span>
+                            <span class="theme-name">Forest</span>
+                        </div>
+                        <div class="theme-option" data-theme="slate">
+                            <span class="theme-swatch" style="background: #e2e8f0;"></span>
+                            <span class="theme-name">Slate</span>
+                        </div>
+                        <div class="theme-option" data-theme="midnight">
+                            <span class="theme-swatch" style="background: #1e1b4b;"></span>
+                            <span class="theme-name">Midnight</span>
+                        </div>
+                        <div class="theme-option" data-theme="paper">
+                            <span class="theme-swatch" style="background: #fffbeb;"></span>
+                            <span class="theme-name">Paper</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Editor Layout -->
+        <div class="editor-layout">
+            <!-- Input Panel -->
+            <div class="panel input-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="panel-title-icon">✏️</span>
+                        Resume Input
+                    </div>
+                    <div class="panel-actions">
+                        <input type="file" id="file-input" class="file-input" accept=".txt,.md">
+                        <button class="btn btn-secondary" id="import-btn">
+                            <span class="btn-icon">📥</span>
+                            Import
+                        </button>
+                        <button class="btn btn-secondary" id="clear-btn">
+                            <span class="btn-icon">🗑️</span>
+                            Clear
+                        </button>
+                        <button class="btn btn-secondary" id="sample-btn">
+                            <span class="btn-icon">📋</span>
+                            Sample
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <textarea 
+                        id="resume-input" 
+                        placeholder="Paste your resume text here...
+
+Example:
+JOHN DOE
+john.doe@email.com | (555) 123-4567 | New York, NY
+
+SUMMARY
+Results-driven software engineer with 5+ years of experience...
+
+EXPERIENCE
+Senior Software Engineer | TechCorp Inc. | 2020 - Present
+• Led development of microservices architecture
+• Mentored junior developers and conducted code reviews
+
+SKILLS
+JavaScript, Python, React, Node.js, AWS, Docker
+
+EDUCATION
+B.S. Computer Science | State University | 2018"
+                    ></textarea>
+                </div>
+                <div class="input-footer">
+                    <span class="char-count"><span id="char-count">0</span> characters</span>
+                    <span class="save-status" id="save-status" style="display: none;">Auto-saved</span>
+                </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="panel preview-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="panel-title-icon">👁️</span>
+                        Preview
+                    </div>
+                    <div class="panel-actions">
+                        <div class="view-toggle">
+                            <button class="view-toggle-btn active" data-view="formatted">Formatted</button>
+                            <button class="view-toggle-btn" data-view="raw">Raw</button>
+                        </div>
+                        <button class="btn btn-secondary" id="export-txt-btn">
+                            <span class="btn-icon">📄</span>
+                            .TXT
+                        </button>
+                        <button class="btn btn-primary" id="export-html-btn">
+                            <span class="btn-icon">📑</span>
+                            .HTML
+                        </button>
+                        <button class="btn btn-ghost" id="print-btn" title="Print">
+                            🖨️
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="resume-preview" id="resume-preview">
+                        <div class="empty-state" id="empty-state">
+                            <div class="empty-state-icon">📄</div>
+                            <div class="empty-state-title">No Resume Content</div>
+                            <div class="empty-state-text">Paste your resume text in the input area to see a formatted preview</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="legend" id="legend" style="display: none;">
+                    <div class="legend-title">Legend</div>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-swatch weak"></span>
+                            <span>Weak phrase (hover for suggestion)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <section class="tips-section">
+            <div class="tips-header">
+                <div class="tips-icon">💡</div>
+                <div>
+                    <div class="tips-title">How Recruiters Read Resumes</div>
+                    <div class="tips-subtitle">Understanding the 6-second scan</div>
+                </div>
+            </div>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h4>⚡ The 6-Second Rule</h4>
+                    <p>Recruiters spend an average of 6 seconds on initial resume screening. Make your key qualifications immediately visible at the top.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>📐 F-Pattern Reading</h4>
+                    <p>Eyes naturally scan in an F-pattern: across the top, down the left side, then across again. Place crucial info along this path.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>🔢 Quantify Achievements</h4>
+                    <p>Numbers catch attention. "Increased sales by 40%" is more impactful than "responsible for increasing sales."</p>
+                </div>
+                <div class="tip-card">
+                    <h4>🎯 Keywords Matter</h4>
+                    <p>ATS systems scan for keywords from the job description. Mirror the language used in the posting.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>📝 Action Verbs First</h4>
+                    <p>Start bullets with strong action verbs: Led, Developed, Implemented, Achieved. Avoid passive phrases.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>🧹 White Space Wins</h4>
+                    <p>Clean formatting with adequate white space improves readability. Dense text blocks get skipped.</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
-        Made with ❤️ by <a href="https://github.com/Aliriyaj007" target="_blank" rel="noopener">Aliriyaj007</a>
+        <div class="footer-content">
+            <p class="footer-text">
+                Made with <span class="footer-heart">❤️</span> by 
+                <a href="https://github.com/Aliriyaj007" class="footer-link" target="_blank" rel="noopener">Aliriyaj007</a>
+            </p>
+        </div>
     </footer>
 
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
     <script>
-        // ===== DOM ELEMENTS =====
-        const resumeInput = document.getElementById('resumeInput');
-        const previewPane = document.getElementById('previewPane');
-        const themeSelect = document.getElementById('themeSelect');
-        const fileInput = document.getElementById('fileInput');
-        const importBtn = document.getElementById('importBtn');
-        const exportBtn = document.getElementById('exportBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const printBtn = document.getElementById('printBtn');
-        const viewToggleBtns = document.querySelectorAll('.view-toggle-btn');
-        const wordCount = document.getElementById('wordCount');
-        const charCount = document.getElementById('charCount');
-        const lineCount = document.getElementById('lineCount');
-        const sectionCount = document.getElementById('sectionCount');
-        const toast = document.getElementById('toast');
-
-        // ===== STATE =====
-        let currentView = 'formatted';
-
-        // ===== WEAK PHRASES =====
+        // ============================================
+        // WEAK PHRASES DATABASE
+        // ============================================
         const weakPhrases = [
-            { phrase: 'responsible for', suggestion: 'Use action verbs like "Led", "Managed", "Delivered"' },
-            { phrase: 'worked on', suggestion: 'Be specific: "Developed", "Designed", "Implemented"' },
-            { phrase: 'helped with', suggestion: 'Quantify impact: "Contributed to X resulting in Y"' },
-            { phrase: 'assisted in', suggestion: 'Specify your role: "Collaborated on", "Supported by"' },
-            { phrase: 'duties included', suggestion: 'Focus on achievements, not duties' },
-            { phrase: 'tasks included', suggestion: 'Highlight results, not just tasks' },
-            { phrase: 'was involved in', suggestion: 'State your direct contribution' },
-            { phrase: 'participated in', suggestion: 'Describe your specific role and impact' },
-            { phrase: 'handled', suggestion: 'Use stronger verbs: "Orchestrated", "Executed"' },
-            { phrase: 'dealt with', suggestion: 'Be specific: "Resolved", "Addressed", "Managed"' },
-            { phrase: 'various', suggestion: 'Be specific about what exactly' },
-            { phrase: 'multiple', suggestion: 'Use exact numbers when possible' },
-            { phrase: 'several', suggestion: 'Quantify: use specific numbers' },
-            { phrase: 'etc.', suggestion: 'Be comprehensive or remove' },
-            { phrase: 'and so on', suggestion: 'Complete the list or summarize better' },
-            { phrase: 'team player', suggestion: 'Show teamwork through examples instead' },
-            { phrase: 'hard worker', suggestion: 'Demonstrate through achievements' },
-            { phrase: 'detail-oriented', suggestion: 'Prove with specific examples' },
-            { phrase: 'self-starter', suggestion: 'Show initiative through accomplishments' },
-            { phrase: 'go-getter', suggestion: 'Replace with concrete achievements' },
-            { phrase: 'think outside the box', suggestion: 'Describe actual innovative solutions' },
-            { phrase: 'synergy', suggestion: 'Use plain language to describe collaboration' },
-            { phrase: 'leverage', suggestion: 'Simply say "use" or be more specific' },
-            { phrase: 'utilized', suggestion: 'Simply say "used"' }
+            { phrase: "responsible for", suggestion: "Try: Led, Managed, Directed, Oversaw" },
+            { phrase: "worked on", suggestion: "Try: Developed, Built, Created, Engineered" },
+            { phrase: "helped with", suggestion: "Try: Supported, Assisted, Contributed to, Collaborated on" },
+            { phrase: "assisted in", suggestion: "Try: Contributed to, Supported, Facilitated" },
+            { phrase: "duties included", suggestion: "Try: Key accomplishments, Delivered, Achieved" },
+            { phrase: "was tasked with", suggestion: "Try: Spearheaded, Championed, Executed" },
+            { phrase: "participated in", suggestion: "Try: Contributed to, Engaged in, Collaborated on" },
+            { phrase: "involved in", suggestion: "Try: Instrumental in, Central to, Key contributor" },
+            { phrase: "dealt with", suggestion: "Try: Resolved, Addressed, Handled, Managed" },
+            { phrase: "handled", suggestion: "Try: Managed, Processed, Coordinated, Administered" },
+            { phrase: "various", suggestion: "Be specific about what/how many" },
+            { phrase: "etc.", suggestion: "List specific items instead" },
+            { phrase: "things", suggestion: "Be specific about what" },
+            { phrase: "stuff", suggestion: "Be specific about what" },
+            { phrase: "a lot of", suggestion: "Try: Numerous, Multiple, or specify quantity" },
+            { phrase: "team player", suggestion: "Show teamwork through specific examples" },
+            { phrase: "hard worker", suggestion: "Demonstrate work ethic through achievements" },
+            { phrase: "self-motivated", suggestion: "Show initiative through specific actions" },
+            { phrase: "detail-oriented", suggestion: "Prove attention to detail with examples" },
+            { phrase: "go-getter", suggestion: "Show drive through measurable results" }
         ];
 
-        // ===== SECTION PATTERNS =====
+        // ============================================
+        // SECTION DETECTION PATTERNS
+        // ============================================
         const sectionPatterns = [
-            { name: 'contact', patterns: ['contact', 'email', 'phone', 'address', 'linkedin', 'github', 'portfolio'] },
-            { name: 'summary', patterns: ['summary', 'objective', 'profile', 'about', 'overview', 'professional summary', 'career objective'] },
-            { name: 'skills', patterns: ['skills', 'technical skills', 'core competencies', 'competencies', 'technologies', 'tools', 'expertise'] },
-            { name: 'experience', patterns: ['experience', 'work experience', 'employment', 'work history', 'professional experience', 'career history'] },
-            { name: 'education', patterns: ['education', 'academic', 'qualifications', 'degrees', 'certifications', 'training'] },
-            { name: 'projects', patterns: ['projects', 'personal projects', 'portfolio', 'key projects'] },
-            { name: 'certifications', patterns: ['certifications', 'licenses', 'credentials', 'certificates'] },
-            { name: 'awards', patterns: ['awards', 'achievements', 'honors', 'recognition'] },
-            { name: 'languages', patterns: ['languages', 'language skills'] },
-            { name: 'interests', patterns: ['interests', 'hobbies', 'activities'] },
-            { name: 'references', patterns: ['references'] },
-            { name: 'publications', patterns: ['publications', 'papers', 'articles'] },
-            { name: 'volunteer', patterns: ['volunteer', 'community', 'volunteering'] }
+            { regex: /^(SUMMARY|PROFESSIONAL SUMMARY|PROFILE|OBJECTIVE|ABOUT|ABOUT ME)$/i, type: 'summary' },
+            { regex: /^(EXPERIENCE|WORK EXPERIENCE|PROFESSIONAL EXPERIENCE|EMPLOYMENT|WORK HISTORY|CAREER HISTORY)$/i, type: 'experience' },
+            { regex: /^(EDUCATION|ACADEMIC|ACADEMICS|QUALIFICATIONS|ACADEMIC BACKGROUND)$/i, type: 'education' },
+            { regex: /^(SKILLS|TECHNICAL SKILLS|CORE COMPETENCIES|COMPETENCIES|EXPERTISE|TECHNOLOGIES)$/i, type: 'skills' },
+            { regex: /^(PROJECTS|PROJECT EXPERIENCE|KEY PROJECTS|PERSONAL PROJECTS)$/i, type: 'projects' },
+            { regex: /^(CERTIFICATIONS|CERTIFICATES|CREDENTIALS|LICENSES)$/i, type: 'certifications' },
+            { regex: /^(ACHIEVEMENTS|AWARDS|HONORS|ACCOMPLISHMENTS|RECOGNITION)$/i, type: 'achievements' },
+            { regex: /^(LANGUAGES|LANGUAGE SKILLS)$/i, type: 'languages' },
+            { regex: /^(INTERESTS|HOBBIES|ACTIVITIES|EXTRACURRICULAR)$/i, type: 'interests' },
+            { regex: /^(REFERENCES|REFERENCES AVAILABLE)$/i, type: 'references' },
+            { regex: /^(VOLUNTEER|VOLUNTEERING|COMMUNITY SERVICE)$/i, type: 'volunteer' },
+            { regex: /^(PUBLICATIONS|PAPERS|RESEARCH)$/i, type: 'publications' }
         ];
 
-        // ===== UTILITIES =====
-        function showToast(message, duration = 3000) {
-            toast.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
-        }
+        // ============================================
+        // THEME CONFIGURATION
+        // ============================================
+        const themeIcons = {
+            light: '☀️',
+            dark: '🌙',
+            sepia: '📜',
+            ocean: '🌊',
+            forest: '🌲',
+            slate: '🪨',
+            midnight: '🌌',
+            paper: '📃'
+        };
 
+        const themeNames = {
+            light: 'Light',
+            dark: 'Dark',
+            sepia: 'Sepia',
+            ocean: 'Ocean',
+            forest: 'Forest',
+            slate: 'Slate',
+            midnight: 'Midnight',
+            paper: 'Paper'
+        };
+
+        // ============================================
+        // SAMPLE RESUME
+        // ============================================
+        const sampleResume = `JOHN DOE
+john.doe@email.com | (555) 123-4567 | San Francisco, CA | linkedin.com/in/johndoe | github.com/johndoe
+
+SUMMARY
+Results-driven Senior Software Engineer with 7+ years of experience designing and implementing scalable web applications. Proven track record of leading cross-functional teams and delivering projects that increased user engagement by 45%. Passionate about clean code, mentorship, and continuous improvement.
+
+EXPERIENCE
+Senior Software Engineer | TechCorp Inc. | Jan 2021 - Present
+• Led development of microservices architecture serving 2M+ daily active users
+• Reduced API response times by 60% through database optimization and caching strategies
+• Mentored team of 5 junior developers, conducting code reviews and technical workshops
+• Responsible for implementing CI/CD pipeline using GitHub Actions and AWS
+
+Software Engineer | StartupXYZ | Jun 2018 - Dec 2020
+• Worked on building React-based dashboard that increased user retention by 35%
+• Helped with migration from monolithic architecture to microservices
+• Implemented real-time collaboration features using WebSocket technology
+• Duties included maintaining 95%+ code coverage across all modules
+
+Junior Developer | WebAgency Co. | Aug 2016 - May 2018
+• Participated in development of 15+ client websites
+• Assisted in implementing responsive designs using CSS Grid and Flexbox
+• Dealt with various frontend performance optimization tasks
+
+SKILLS
+Languages: JavaScript, TypeScript, Python, Go, SQL
+Frontend: React, Vue.js, Next.js, Tailwind CSS, Redux
+Backend: Node.js, Express, FastAPI, PostgreSQL, MongoDB, Redis
+DevOps: Docker, Kubernetes, AWS, GCP, Terraform, CI/CD
+Tools: Git, Jira, Figma, Postman, VS Code
+
+EDUCATION
+Bachelor of Science in Computer Science | Stanford University | 2016
+• GPA: 3.8/4.0, Dean's List
+• Relevant Coursework: Data Structures, Algorithms, Database Systems, Web Development
+
+CERTIFICATIONS
+• AWS Solutions Architect Associate | 2022
+• Google Cloud Professional Developer | 2021
+
+PROJECTS
+Open Source Contribution | GitHub
+• Core contributor to popular React component library (5k+ stars)
+• Implemented accessibility improvements benefiting 100k+ users
+
+Personal Finance App | Side Project
+• Built full-stack budgeting application used by 500+ monthly active users
+• Tech stack: React, Node.js, PostgreSQL, Stripe integration`;
+
+        // ============================================
+        // STATE MANAGEMENT
+        // ============================================
+        let state = {
+            resumeText: '',
+            currentTheme: 'light',
+            currentView: 'formatted',
+            autoSaveTimeout: null
+        };
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const elements = {
+            resumeInput: document.getElementById('resume-input'),
+            resumePreview: document.getElementById('resume-preview'),
+            charCount: document.getElementById('char-count'),
+            saveStatus: document.getElementById('save-status'),
+            emptyState: document.getElementById('empty-state'),
+            legend: document.getElementById('legend'),
+            themeToggle: document.getElementById('theme-toggle'),
+            themeDropdown: document.getElementById('theme-dropdown'),
+            currentThemeIcon: document.getElementById('current-theme-icon'),
+            currentThemeName: document.getElementById('current-theme-name'),
+            fileInput: document.getElementById('file-input'),
+            toastContainer: document.getElementById('toast-container')
+        };
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
-        function saveToLocalStorage() {
-            try {
-                localStorage.setItem('resumeContent', resumeInput.value);
-                localStorage.setItem('selectedTheme', themeSelect.value);
-            } catch (e) {
-                console.warn('LocalStorage not available');
-            }
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            elements.toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 200);
+            }, 3000);
         }
 
-        function loadFromLocalStorage() {
-            try {
-                const savedContent = localStorage.getItem('resumeContent');
-                const savedTheme = localStorage.getItem('selectedTheme');
-                
-                if (savedContent) {
-                    resumeInput.value = savedContent;
-                }
-                if (savedTheme) {
-                    themeSelect.value = savedTheme;
-                    document.documentElement.setAttribute('data-theme', savedTheme);
-                }
-            } catch (e) {
-                console.warn('LocalStorage not available');
-            }
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
         }
 
-        // ===== RESUME PARSER =====
+        // ============================================
+        // RESUME PARSING
+        // ============================================
         function detectSectionType(line) {
-            const lowerLine = line.toLowerCase().trim();
-            for (const section of sectionPatterns) {
-                for (const pattern of section.patterns) {
-                    if (lowerLine === pattern || 
-                        lowerLine === pattern + ':' || 
-                        lowerLine.startsWith(pattern + ' ') ||
-                        lowerLine.startsWith(pattern + ':')) {
-                        return section.name;
-                    }
+            const trimmedLine = line.trim();
+            for (const pattern of sectionPatterns) {
+                if (pattern.regex.test(trimmedLine)) {
+                    return pattern.type;
                 }
             }
             return null;
         }
 
-        function isHeader(line) {
+        function isLikelyHeading(line) {
             const trimmed = line.trim();
             if (!trimmed) return false;
             
-            // Check if all caps (likely a header)
-            if (trimmed === trimmed.toUpperCase() && trimmed.length > 2 && /[A-Z]/.test(trimmed)) {
+            // All caps lines (potential headers)
+            if (trimmed === trimmed.toUpperCase() && trimmed.length > 2 && trimmed.length < 50) {
                 return true;
             }
             
-            // Check if matches section pattern
-            if (detectSectionType(line)) {
-                return true;
-            }
-            
-            // Check if ends with colon
+            // Lines ending with colon
             if (trimmed.endsWith(':') && trimmed.length < 50) {
                 return true;
             }
@@ -1127,275 +1490,503 @@ BS Computer Science | State University | 2018"
             return false;
         }
 
-        function highlightWeakPhrases(text) {
-            let result = escapeHtml(text);
+        function isContactLine(line) {
+            const trimmed = line.trim().toLowerCase();
+            const contactPatterns = [
+                /\b[\w.-]+@[\w.-]+\.\w+\b/, // Email
+                /\b\d{3}[-.)]\s?\d{3}[-.)]\s?\d{4}\b/, // Phone
+                /linkedin\.com|github\.com|twitter\.com|portfolio/i, // Social links
+            ];
+            return contactPatterns.some(pattern => pattern.test(trimmed));
+        }
+
+        function isDateLine(line) {
+            const datePatterns = [
+                /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\s+\d{4}\b/i,
+                /\b\d{4}\s*[-–]\s*(present|\d{4})\b/i,
+                /\b(20\d{2}|19\d{2})\b/
+            ];
+            return datePatterns.some(pattern => pattern.test(line));
+        }
+
+        function extractDateFromLine(line) {
+            const datePatterns = [
+                /\b((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\s+\d{4}\s*[-–]\s*(?:present|(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\s+\d{4}))\b/i,
+                /\b(\d{4}\s*[-–]\s*(?:present|\d{4}))\b/i
+            ];
             
-            for (const { phrase, suggestion } of weakPhrases) {
-                const regex = new RegExp(`(${phrase})`, 'gi');
-                result = result.replace(regex, `<span class="weak-phrase" data-tip="${suggestion}">$1</span>`);
+            for (const pattern of datePatterns) {
+                const match = line.match(pattern);
+                if (match) {
+                    return match[1];
+                }
             }
-            
-            return result;
+            return null;
         }
 
         function parseResume(text) {
             if (!text.trim()) {
-                return null;
+                return { sections: [], hasContent: false };
             }
 
             const lines = text.split('\n');
             const sections = [];
-            let currentSection = { name: 'header', content: [] };
-            let detectedSections = 0;
+            let currentSection = null;
+            let headerInfo = { name: '', contact: [] };
+            let isInHeader = true;
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
                 const trimmedLine = line.trim();
 
-                if (isHeader(trimmedLine)) {
-                    // Save previous section if it has content
-                    if (currentSection.content.length > 0) {
-                        sections.push({ ...currentSection });
+                // Skip empty lines at the beginning
+                if (!trimmedLine && isInHeader && !headerInfo.name) {
+                    continue;
+                }
+
+                // Detect section headers
+                const sectionType = detectSectionType(trimmedLine);
+                if (sectionType) {
+                    isInHeader = false;
+                    if (currentSection) {
+                        sections.push(currentSection);
                     }
-                    
-                    // Start new section
-                    const sectionType = detectSectionType(trimmedLine) || 'other';
                     currentSection = {
-                        name: sectionType,
-                        title: trimmedLine.replace(/[:\s]+$/, ''),
+                        type: sectionType,
+                        title: trimmedLine,
                         content: []
                     };
-                    detectedSections++;
-                } else {
-                    currentSection.content.push(line);
+                    continue;
                 }
-            }
 
-            // Don't forget the last section
-            if (currentSection.content.length > 0) {
-                sections.push(currentSection);
-            }
+                // Check for generic headings (all caps or ending with :)
+                if (!currentSection && isLikelyHeading(trimmedLine) && !isInHeader) {
+                    if (currentSection) {
+                        sections.push(currentSection);
+                    }
+                    currentSection = {
+                        type: 'generic',
+                        title: trimmedLine.replace(/:$/, ''),
+                        content: []
+                    };
+                    continue;
+                }
 
-            return { sections, detectedSections };
-        }
-
-        function formatSkills(content) {
-            const text = content.join(' ').trim();
-            // Split by common delimiters
-            const skills = text.split(/[,;|•·●○►▪▸◦‣⁃]|\s{2,}/)
-                .map(s => s.trim())
-                .filter(s => s && s.length > 1);
-            
-            if (skills.length > 1) {
-                return `<div class="skills-container">${skills.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')}</div>`;
-            }
-            return formatContent(content);
-        }
-
-        function formatContent(content) {
-            let html = '';
-            let inList = false;
-            
-            for (const line of content) {
-                const trimmed = line.trim();
-                if (!trimmed) {
-                    if (inList) {
-                        html += '</ul>';
-                        inList = false;
+                // Header processing (name and contact)
+                if (isInHeader) {
+                    if (!headerInfo.name && trimmedLine && !isContactLine(trimmedLine)) {
+                        headerInfo.name = trimmedLine;
+                    } else if (isContactLine(trimmedLine) || (headerInfo.name && !trimmedLine)) {
+                        if (trimmedLine) {
+                            headerInfo.contact.push(trimmedLine);
+                        }
+                        // Check if next non-empty line is a section header
+                        let nextNonEmpty = i + 1;
+                        while (nextNonEmpty < lines.length && !lines[nextNonEmpty].trim()) {
+                            nextNonEmpty++;
+                        }
+                        if (nextNonEmpty < lines.length && detectSectionType(lines[nextNonEmpty].trim())) {
+                            isInHeader = false;
+                        }
+                    } else if (trimmedLine) {
+                        // Could be a subtitle or tagline
+                        if (headerInfo.name && !headerInfo.subtitle) {
+                            headerInfo.subtitle = trimmedLine;
+                        } else {
+                            headerInfo.contact.push(trimmedLine);
+                        }
                     }
                     continue;
                 }
 
-                // Check for bullet points
-                if (/^[-•*►▪▸◦‣⁃○●]\s*/.test(trimmed)) {
+                // Add content to current section
+                if (currentSection) {
+                    currentSection.content.push(line);
+                }
+            }
+
+            // Push last section
+            if (currentSection) {
+                sections.push(currentSection);
+            }
+
+            return {
+                header: headerInfo,
+                sections: sections,
+                hasContent: true
+            };
+        }
+
+        // ============================================
+        // WEAK PHRASE HIGHLIGHTING
+        // ============================================
+        function highlightWeakPhrases(text) {
+            let result = text;
+            
+            for (const { phrase, suggestion } of weakPhrases) {
+                const regex = new RegExp(`\\b(${phrase})\\b`, 'gi');
+                result = result.replace(regex, 
+                    `<span class="weak-phrase" data-suggestion="${suggestion}">$1</span>`
+                );
+            }
+            
+            return result;
+        }
+
+        // ============================================
+        // RENDER FUNCTIONS
+        // ============================================
+        function renderSkillsSection(content) {
+            const contentText = content.join('\n').trim();
+            if (!contentText) return '';
+
+            // Try to detect skill categories
+            const lines = contentText.split('\n').filter(l => l.trim());
+            let html = '<div class="skills-content">';
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed) continue;
+
+                // Check for "Category: skill1, skill2" format
+                if (trimmed.includes(':')) {
+                    const [category, skills] = trimmed.split(':').map(s => s.trim());
+                    if (skills) {
+                        html += `<p><strong>${escapeHtml(category)}:</strong></p>`;
+                        html += '<div class="skills-list">';
+                        skills.split(/[,;|]/).forEach(skill => {
+                            const trimmedSkill = skill.trim();
+                            if (trimmedSkill) {
+                                html += `<span class="skill-tag">${escapeHtml(trimmedSkill)}</span>`;
+                            }
+                        });
+                        html += '</div>';
+                    }
+                } else {
+                    // Simple comma-separated list
+                    html += '<div class="skills-list">';
+                    trimmed.split(/[,;|]/).forEach(skill => {
+                        const trimmedSkill = skill.trim();
+                        if (trimmedSkill) {
+                            html += `<span class="skill-tag">${escapeHtml(trimmedSkill)}</span>`;
+                        }
+                    });
+                    html += '</div>';
+                }
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function renderExperienceSection(content) {
+            const contentText = content.join('\n');
+            const lines = contentText.split('\n');
+            let html = '';
+            let currentEntry = null;
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed) continue;
+
+                // Check if this is a new entry (job title line)
+                // Usually contains company name and/or date
+                const date = extractDateFromLine(trimmed);
+                const isBullet = trimmed.startsWith('•') || trimmed.startsWith('-') || trimmed.startsWith('*');
+
+                if (!isBullet && (date || (trimmed.includes('|') && !isBullet))) {
+                    // Save previous entry
+                    if (currentEntry) {
+                        html += renderEntry(currentEntry);
+                    }
+                    
+                    // Parse new entry header
+                    const parts = trimmed.split('|').map(p => p.trim());
+                    currentEntry = {
+                        title: parts[0] || '',
+                        subtitle: parts.length > 2 ? parts[1] : '',
+                        date: date || (parts.length > 2 ? parts[2] : parts[1]) || '',
+                        bullets: []
+                    };
+                } else if (isBullet && currentEntry) {
+                    // Add bullet to current entry
+                    const bulletText = trimmed.replace(/^[•\-*]\s*/, '');
+                    currentEntry.bullets.push(highlightWeakPhrases(escapeHtml(bulletText)));
+                } else if (currentEntry) {
+                    // Could be a subtitle or continuation
+                    if (!currentEntry.subtitle) {
+                        currentEntry.subtitle = trimmed;
+                    } else {
+                        currentEntry.bullets.push(highlightWeakPhrases(escapeHtml(trimmed)));
+                    }
+                } else {
+                    // Orphan content, create new entry
+                    currentEntry = {
+                        title: trimmed,
+                        subtitle: '',
+                        date: date || '',
+                        bullets: []
+                    };
+                }
+            }
+
+            // Save last entry
+            if (currentEntry) {
+                html += renderEntry(currentEntry);
+            }
+
+            return html;
+        }
+
+        function renderEntry(entry) {
+            let html = '<div class="resume-entry">';
+            html += '<div class="resume-entry-header">';
+            html += `<span class="resume-entry-title">${escapeHtml(entry.title)}</span>`;
+            if (entry.date) {
+                html += `<span class="resume-entry-date">${escapeHtml(entry.date)}</span>`;
+            }
+            html += '</div>';
+            
+            if (entry.subtitle) {
+                html += `<div class="resume-entry-subtitle">${escapeHtml(entry.subtitle)}</div>`;
+            }
+            
+            if (entry.bullets.length > 0) {
+                html += '<div class="resume-entry-content"><ul>';
+                entry.bullets.forEach(bullet => {
+                    html += `<li>${bullet}</li>`;
+                });
+                html += '</ul></div>';
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        function renderGenericSection(content) {
+            const contentText = content.join('\n').trim();
+            if (!contentText) return '';
+
+            const lines = contentText.split('\n');
+            let html = '<div class="resume-section-content">';
+            let inList = false;
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed) continue;
+
+                const isBullet = trimmed.startsWith('•') || trimmed.startsWith('-') || trimmed.startsWith('*');
+                
+                if (isBullet) {
                     if (!inList) {
                         html += '<ul>';
                         inList = true;
                     }
-                    const bulletContent = trimmed.replace(/^[-•*►▪▸◦‣⁃○●]\s*/, '');
-                    html += `<li>${highlightWeakPhrases(bulletContent)}</li>`;
+                    const bulletText = trimmed.replace(/^[•\-*]\s*/, '');
+                    html += `<li>${highlightWeakPhrases(escapeHtml(bulletText))}</li>`;
                 } else {
                     if (inList) {
                         html += '</ul>';
                         inList = false;
                     }
-                    html += `<p>${highlightWeakPhrases(trimmed)}</p>`;
+                    html += `<p>${highlightWeakPhrases(escapeHtml(trimmed))}</p>`;
                 }
             }
-            
+
             if (inList) {
                 html += '</ul>';
             }
-            
-            return html || '<p class="text-muted">No content</p>';
-        }
 
-        function formatHeader(content) {
-            // Extract contact info from first section
-            const contactPatterns = {
-                email: /[\w.-]+@[\w.-]+\.\w+/g,
-                phone: /[\+]?[(]?[0-9]{1,4}[)]?[-\s\./0-9]{7,}/g,
-                linkedin: /linkedin\.com\/in\/[\w-]+/gi,
-                github: /github\.com\/[\w-]+/gi,
-                website: /(?:https?:\/\/)?(?:www\.)?[\w-]+\.[\w.-]+/gi
-            };
-
-            let html = '';
-            const contentText = content.join('\n');
-
-            // First non-empty line is likely the name
-            const name = content.find(l => l.trim())?.trim();
-            if (name) {
-                html += `<h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${escapeHtml(name)}</h2>`;
-            }
-
-            // Extract contact info
-            const contacts = [];
-            const emailMatch = contentText.match(contactPatterns.email);
-            if (emailMatch) contacts.push(`📧 ${emailMatch[0]}`);
-            
-            const phoneMatch = contentText.match(contactPatterns.phone);
-            if (phoneMatch) contacts.push(`📱 ${phoneMatch[0]}`);
-            
-            const linkedinMatch = contentText.match(contactPatterns.linkedin);
-            if (linkedinMatch) contacts.push(`💼 ${linkedinMatch[0]}`);
-            
-            const githubMatch = contentText.match(contactPatterns.github);
-            if (githubMatch) contacts.push(`💻 ${githubMatch[0]}`);
-
-            if (contacts.length > 0) {
-                html += `<div class="contact-info">${contacts.map(c => `<span class="contact-item">${escapeHtml(c)}</span>`).join('')}</div>`;
-            }
-
+            html += '</div>';
             return html;
         }
 
         function renderFormattedResume(text) {
             const parsed = parseResume(text);
             
-            if (!parsed || parsed.sections.length === 0) {
-                return `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📋</div>
-                        <h3>No Resume Content</h3>
-                        <p>Paste your resume text on the left to see the preview</p>
-                    </div>
-                `;
+            if (!parsed.hasContent) {
+                elements.emptyState.style.display = 'flex';
+                elements.legend.style.display = 'none';
+                return '';
             }
 
+            elements.emptyState.style.display = 'none';
+            elements.legend.style.display = 'block';
+
             let html = '';
+
+            // Render header
+            if (parsed.header.name) {
+                html += `<div class="resume-name">${escapeHtml(parsed.header.name)}</div>`;
+            }
             
+            if (parsed.header.contact.length > 0) {
+                html += '<div class="resume-contact">';
+                parsed.header.contact.forEach(item => {
+                    // Make emails and links clickable
+                    let processed = escapeHtml(item);
+                    processed = processed.replace(
+                        /\b([\w.-]+@[\w.-]+\.\w+)\b/g, 
+                        '<a href="mailto:$1">$1</a>'
+                    );
+                    processed = processed.replace(
+                        /\b((?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b[-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi,
+                        function(match) {
+                            const href = match.startsWith('http') ? match : 'https://' + match;
+                            return `<a href="${href}" target="_blank" rel="noopener">${match}</a>`;
+                        }
+                    );
+                    html += `<span>${processed}</span>`;
+                });
+                html += '</div>';
+            }
+
+            // Render sections
             for (const section of parsed.sections) {
                 html += '<div class="resume-section">';
+                html += `<div class="resume-section-title">${escapeHtml(section.title.replace(/:$/, ''))}</div>`;
                 
-                if (section.name === 'header') {
-                    html += formatHeader(section.content);
-                } else {
-                    const title = section.title || section.name.charAt(0).toUpperCase() + section.name.slice(1);
-                    html += `<div class="section-header">${escapeHtml(title)}</div>`;
-                    html += '<div class="section-content">';
-                    
-                    if (section.name === 'skills') {
-                        html += formatSkills(section.content);
-                    } else {
-                        html += formatContent(section.content);
-                    }
-                    
-                    html += '</div>';
+                switch (section.type) {
+                    case 'skills':
+                        html += renderSkillsSection(section.content);
+                        break;
+                    case 'experience':
+                    case 'projects':
+                    case 'volunteer':
+                        html += renderExperienceSection(section.content);
+                        break;
+                    case 'education':
+                    case 'certifications':
+                        html += renderExperienceSection(section.content);
+                        break;
+                    default:
+                        html += renderGenericSection(section.content);
                 }
                 
                 html += '</div>';
             }
 
-            // Update section count
-            sectionCount.textContent = parsed.detectedSections;
-
             return html;
         }
 
-        function updatePreview() {
-            const text = resumeInput.value;
-            
-            if (currentView === 'formatted') {
-                previewPane.innerHTML = renderFormattedResume(text);
-                previewPane.classList.remove('raw-view');
-            } else {
-                previewPane.innerHTML = highlightWeakPhrases(text) || `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📋</div>
-                        <h3>No Resume Content</h3>
-                        <p>Paste your resume text on the left to see the preview</p>
-                    </div>
-                `;
-                previewPane.classList.add('raw-view');
+        function renderRawView(text) {
+            if (!text.trim()) {
+                elements.emptyState.style.display = 'flex';
+                elements.legend.style.display = 'none';
+                return '';
             }
 
-            // Update stats
-            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-            const chars = text.length;
-            const lines = text ? text.split('\n').length : 0;
+            elements.emptyState.style.display = 'none';
+            elements.legend.style.display = 'block';
 
-            wordCount.textContent = words;
-            charCount.textContent = chars;
-            lineCount.textContent = lines;
+            return highlightWeakPhrases(escapeHtml(text));
+        }
 
-            // Save to localStorage
+        function updatePreview() {
+            const text = elements.resumeInput.value;
+            state.resumeText = text;
+
+            // Update character count
+            elements.charCount.textContent = text.length;
+
+            // Render based on current view
+            if (state.currentView === 'formatted') {
+                elements.resumePreview.classList.remove('raw-view');
+                elements.resumePreview.innerHTML = renderFormattedResume(text) || elements.emptyState.outerHTML;
+            } else {
+                elements.resumePreview.classList.add('raw-view');
+                elements.resumePreview.innerHTML = renderRawView(text) || elements.emptyState.outerHTML;
+            }
+        }
+
+        // ============================================
+        // STORAGE FUNCTIONS
+        // ============================================
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('resumeViewer_text', state.resumeText);
+                localStorage.setItem('resumeViewer_theme', state.currentTheme);
+                elements.saveStatus.style.display = 'inline-flex';
+                setTimeout(() => {
+                    elements.saveStatus.style.display = 'none';
+                }, 2000);
+            } catch (e) {
+                console.warn('LocalStorage not available:', e);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const savedText = localStorage.getItem('resumeViewer_text');
+                const savedTheme = localStorage.getItem('resumeViewer_theme');
+                
+                if (savedText) {
+                    elements.resumeInput.value = savedText;
+                    state.resumeText = savedText;
+                }
+                
+                if (savedTheme && themeNames[savedTheme]) {
+                    setTheme(savedTheme);
+                }
+            } catch (e) {
+                console.warn('LocalStorage not available:', e);
+            }
+        }
+
+        const debouncedSave = debounce(saveToLocalStorage, 1000);
+
+        // ============================================
+        // THEME FUNCTIONS
+        // ============================================
+        function setTheme(themeName) {
+            state.currentTheme = themeName;
+            document.documentElement.setAttribute('data-theme', themeName);
+            elements.currentThemeIcon.textContent = themeIcons[themeName];
+            elements.currentThemeName.textContent = themeNames[themeName];
+
+            // Update active state in dropdown
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.toggle('active', option.dataset.theme === themeName);
+            });
+
             saveToLocalStorage();
         }
 
-        // ===== EVENT LISTENERS =====
-        
-        // Resume input changes
-        let debounceTimer;
-        resumeInput.addEventListener('input', () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(updatePreview, 150);
-        });
+        function toggleThemeDropdown() {
+            elements.themeDropdown.classList.toggle('open');
+        }
 
-        // Theme selector
-        themeSelect.addEventListener('change', (e) => {
-            document.documentElement.setAttribute('data-theme', e.target.value);
-            saveToLocalStorage();
-            showToast(`Theme changed to ${e.target.options[e.target.selectedIndex].text}`);
-        });
+        // ============================================
+        // IMPORT/EXPORT FUNCTIONS
+        // ============================================
+        function importFile() {
+            elements.fileInput.click();
+        }
 
-        // View toggle
-        viewToggleBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                viewToggleBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentView = btn.dataset.view;
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                elements.resumeInput.value = e.target.result;
                 updatePreview();
-            });
-        });
+                saveToLocalStorage();
+                showToast('Resume imported successfully!');
+            };
+            reader.onerror = () => {
+                showToast('Error reading file', 'error');
+            };
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
 
-        // Import button
-        importBtn.addEventListener('click', () => {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    resumeInput.value = event.target.result;
-                    updatePreview();
-                    showToast(`Imported: ${file.name}`);
-                };
-                reader.onerror = () => {
-                    showToast('Error reading file');
-                };
-                reader.readAsText(file);
-            }
-            fileInput.value = ''; // Reset for same file selection
-        });
-
-        // Export button
-        exportBtn.addEventListener('click', () => {
-            const text = resumeInput.value;
+        function exportAsTxt() {
+            const text = elements.resumeInput.value;
             if (!text.trim()) {
-                showToast('Nothing to export');
+                showToast('No content to export', 'error');
                 return;
             }
 
@@ -1404,61 +1995,270 @@ BS Computer Science | State University | 2018"
             const a = document.createElement('a');
             a.href = url;
             a.download = 'resume.txt';
-            document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast('Resume exported successfully!');
-        });
+            showToast('Resume exported as TXT!');
+        }
 
-        // Clear button
-        clearBtn.addEventListener('click', () => {
-            if (resumeInput.value && confirm('Are you sure you want to clear the resume?')) {
-                resumeInput.value = '';
-                updatePreview();
-                showToast('Resume cleared');
+        function exportAsHtml() {
+            const text = elements.resumeInput.value;
+            if (!text.trim()) {
+                showToast('No content to export', 'error');
+                return;
             }
-        });
 
-        // Print button
-        printBtn.addEventListener('click', () => {
+            const previewHtml = renderFormattedResume(text);
+            const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+            color: #1e293b;
+        }
+        .resume-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        .resume-contact {
+            font-size: 0.875rem;
+            color: #475569;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1rem;
+        }
+        .resume-contact a { color: #2563eb; text-decoration: none; }
+        .resume-section { margin-bottom: 1.5rem; }
+        .resume-section-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #2563eb;
+            margin-bottom: 0.875rem;
+        }
+        .resume-entry { margin-bottom: 1.25rem; }
+        .resume-entry-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.375rem;
+        }
+        .resume-entry-title { font-weight: 600; }
+        .resume-entry-date { font-size: 0.8125rem; color: #64748b; font-style: italic; }
+        .resume-entry-subtitle { font-size: 0.875rem; color: #475569; margin-bottom: 0.5rem; }
+        .resume-entry-content ul { list-style: none; padding-left: 0; }
+        .resume-entry-content li {
+            position: relative;
+            padding-left: 1.25rem;
+            margin-bottom: 0.375rem;
+            color: #475569;
+        }
+        .resume-entry-content li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+        }
+        .skills-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .skill-tag {
+            padding: 0.25rem 0.75rem;
+            background: #dbeafe;
+            color: #2563eb;
+            border-radius: 50px;
+            font-size: 0.8125rem;
+        }
+        .weak-phrase {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 0 0.25rem;
+            border-radius: 3px;
+        }
+        @media print {
+            body { padding: 0; }
+            .weak-phrase { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        }
+    </style>
+</head>
+<body>
+    ${previewHtml}
+</body>
+</html>`;
+
+            const blob = new Blob([fullHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resume.html';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Resume exported as HTML!');
+        }
+
+        function printResume() {
             window.print();
-        });
+        }
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            // Ctrl/Cmd + S to save/export
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                exportBtn.click();
-            }
-            // Ctrl/Cmd + P to print
-            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
-                e.preventDefault();
-                printBtn.click();
-            }
-        });
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        function initEventListeners() {
+            // Resume input
+            elements.resumeInput.addEventListener('input', () => {
+                updatePreview();
+                debouncedSave();
+            });
 
-        // ===== INITIALIZATION =====
+            // Theme toggle
+            elements.themeToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleThemeDropdown();
+            });
+
+            // Theme options
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    setTheme(option.dataset.theme);
+                    elements.themeDropdown.classList.remove('open');
+                });
+            });
+
+            // Close dropdown on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.theme-selector')) {
+                    elements.themeDropdown.classList.remove('open');
+                }
+            });
+
+            // View toggle
+            document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.currentView = btn.dataset.view;
+                    updatePreview();
+                });
+            });
+
+            // Import button
+            document.getElementById('import-btn').addEventListener('click', importFile);
+            elements.fileInput.addEventListener('change', handleFileImport);
+
+            // Clear button
+            document.getElementById('clear-btn').addEventListener('click', () => {
+                if (elements.resumeInput.value && confirm('Clear all resume content?')) {
+                    elements.resumeInput.value = '';
+                    updatePreview();
+                    saveToLocalStorage();
+                    showToast('Content cleared');
+                }
+            });
+
+            // Sample button
+            document.getElementById('sample-btn').addEventListener('click', () => {
+                elements.resumeInput.value = sampleResume;
+                updatePreview();
+                saveToLocalStorage();
+                showToast('Sample resume loaded');
+            });
+
+            // Export buttons
+            document.getElementById('export-txt-btn').addEventListener('click', exportAsTxt);
+            document.getElementById('export-html-btn').addEventListener('click', exportAsHtml);
+            document.getElementById('print-btn').addEventListener('click', printResume);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Ctrl/Cmd + S to save (prevent default and show saved status)
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    saveToLocalStorage();
+                    showToast('Saved!');
+                }
+                
+                // Ctrl/Cmd + P to print
+                if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                    e.preventDefault();
+                    printResume();
+                }
+            });
+        }
+
+        // ============================================
+        // SERVICE WORKER REGISTRATION (for offline)
+        // ============================================
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                // Create a simple service worker inline using a blob
+                const swCode = `
+                    const CACHE_NAME = 'resume-viewer-v1';
+                    
+                    self.addEventListener('install', (event) => {
+                        self.skipWaiting();
+                    });
+                    
+                    self.addEventListener('activate', (event) => {
+                        event.waitUntil(clients.claim());
+                    });
+                    
+                    self.addEventListener('fetch', (event) => {
+                        event.respondWith(
+                            caches.match(event.request).then((response) => {
+                                return response || fetch(event.request).then((fetchResponse) => {
+                                    // Clone the response for caching
+                                    const responseClone = fetchResponse.clone();
+                                    caches.open(CACHE_NAME).then((cache) => {
+                                        cache.put(event.request, responseClone);
+                                    });
+                                    return fetchResponse;
+                                });
+                            }).catch(() => {
+                                // Return cached version if offline
+                                return caches.match(event.request);
+                            })
+                        );
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swUrl).catch(() => {
+                    console.log('Service worker registration skipped (same-origin policy)');
+                });
+            }
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
         function init() {
             loadFromLocalStorage();
             updatePreview();
+            initEventListeners();
+            registerServiceWorker();
             
-            // Register service worker for offline support
-            if ('serviceWorker' in navigator) {
-                // For a single-file app, we'll use cache API directly
-                // This ensures the page works offline after first load
-                caches.open('resume-viewer-v1').then(cache => {
-                    cache.add(window.location.href);
-                });
-            }
-
-            console.log('📄 Offline Resume Viewer initialized');
-            console.log('💡 Tip: Press Ctrl+S to export, Ctrl+P to print');
+            // Mark active theme
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.toggle('active', option.dataset.theme === state.currentTheme);
+            });
         }
 
-        // Run on load
-        init();
+        // Start the app
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
