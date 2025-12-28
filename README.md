@@ -27,27 +27,26 @@ No backend. No tracking. No accounts. Just clarity.
 
 ---
 
-## 🚀 Feature Highlights
+## 🚀 Feature Summary
 
-| Feature                      | Description                                                                     |
-| ---------------------------- | ------------------------------------------------------------------------------- |
-| **Paste & Parse**            | Heuristic-based section detection using headers, spacing, patterns, and bullets |
-| **8 Themes**                 | Light, Dark, Sepia, Ocean, Forest, Lavender, Midnight, High Contrast            |
-| **Weak Phrase Highlighting** | Detects 24 common weak phrases with hover-based explanations                    |
-| **View Toggle**              | Instantly switch between formatted recruiter view and raw text                  |
-| **Import / Export**          | Import `.txt` / `.md` files and export cleaned text as `.txt`                   |
-| **Auto Save**                | Resume content + theme preference saved via `localStorage`                      |
-| **Print-Friendly**           | Clean print styles, UI hidden automatically                                     |
-| **Offline Support**          | Works fully offline after first load using Cache API                            |
-| **Stats Bar**                | Word, character, line, and section counts                                       |
-| **Responsive**               | Optimized for mobile, tablet, and desktop                                       |
-| **Keyboard Shortcuts**       | `Ctrl + S` (export), `Ctrl + P` (print)                                         |
+| Feature                      | Implementation                                              |
+| ---------------------------- | ----------------------------------------------------------- |
+| **Single HTML File**         | ✅ All CSS & JavaScript inline                               |
+| **Offline-First**            | ✅ Service Worker + `localStorage`                           |
+| **8 Themes**                 | ✅ Light, Dark, Sepia, Ocean, Forest, Slate, Midnight, Paper |
+| **Resume Parsing**           | ✅ Heuristic-based section detection                         |
+| **Weak Phrase Highlighting** | ✅ 20 common weak phrases with suggestions                   |
+| **Raw / Formatted Toggle**   | ✅ Two clear view modes                                      |
+| **Import / Export**          | ✅ TXT import, TXT & HTML export                             |
+| **Print Support**            | ✅ Clean, distraction-free print styles                      |
+| **Auto-save**                | ✅ Debounced `localStorage` persistence                      |
+| **Recruiter Tips**           | ✅ 6-card recruiter knowledge section                        |
 
 ---
 
 ## 🧠 How It Works (Simple Flow)
 
-1. Paste your resume text (or import a `.txt` / `.md` file)
+1. Paste your resume text (or import a `.txt` file)
 2. The app parses sections using lightweight heuristics
 3. Resume is rendered into a clean, recruiter-style layout
 4. Weak phrases are highlighted automatically
@@ -71,7 +70,7 @@ No backend. No tracking. No accounts. Just clarity.
 
 ## ⚠️ Weak Phrase Detection
 
-The tool highlights **24 common resume weak phrases**, including:
+The tool highlights **20 common resume weak phrases**, including:
 
 * "Responsible for"
 * "Worked on"
@@ -79,16 +78,7 @@ The tool highlights **24 common resume weak phrases**, including:
 * "Familiar with"
 * "Involved in"
 
-Hovering over a highlighted phrase explains **why recruiters dislike it** and encourages stronger alternatives.
-
----
-
-## ⌨️ Keyboard Shortcuts
-
-| Shortcut   | Action                    |
-| ---------- | ------------------------- |
-| `Ctrl + S` | Export resume as `.txt`   |
-| `Ctrl + P` | Print resume (clean view) |
+Each highlighted phrase includes a short suggestion explaining **why recruiters avoid it** and how to improve it.
 
 ---
 
@@ -98,7 +88,7 @@ Hovering over a highlighted phrase explains **why recruiters dislike it** and en
 * **CSS3** — Themes, layout, print styles
 * **Vanilla JavaScript** — Parsing, highlighting, state
 * **localStorage** — Persistence
-* **Cache API** — Offline support
+* **Service Worker / Cache API** — Offline support
 
 > No frameworks. No libraries. No APIs.
 
