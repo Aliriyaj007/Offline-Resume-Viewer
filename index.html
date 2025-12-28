@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Offline-first resume viewer - see how recruiters read your resume instantly">
+    <title>Offline Resume Viewer</title>
+    
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== THEME VARIABLES ===== */
+        :root {
+            /* Light Theme (Default) */
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --accent: #4361ee;
+            --accent-hover: #3651d4;
+            --border: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --highlight-weak: #fff3cd;
+            --highlight-weak-text: #856404;
+            --success: #28a745;
+            --section-header: #4361ee;
+            --preview-bg: #ffffff;
+            --input-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-tertiary: #0f3460;
+            --text-primary: #eaeaea;
+            --text-secondary: #b8b8b8;
+            --text-muted: #888888;
+            --accent: #4cc9f0;
+            --accent-hover: #72d4f5;
+            --border: #2a2a4a;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --highlight-weak: #4a3f00;
+            --highlight-weak-text: #ffc107;
+            --success: #4ade80;
+            --section-header: #4cc9f0;
+            --preview-bg: #16213e;
+            --input-bg: #0f3460;
+        }
+
+        [data-theme="sepia"] {
+            --bg-primary: #f4ecd8;
+            --bg-secondary: #faf6eb;
+            --bg-tertiary: #e8e0cc;
+            --text-primary: #433422;
+            --text-secondary: #5d4e37;
+            --text-muted: #7a6b57;
+            --accent: #8b4513;
+            --accent-hover: #a0522d;
+            --border: #d4c8b0;
+            --shadow: rgba(67, 52, 34, 0.1);
+            --highlight-weak: #ffe4b5;
+            --highlight-weak-text: #8b4513;
+            --success: #6b8e23;
+            --section-header: #8b4513;
+            --preview-bg: #faf6eb;
+            --input-bg: #faf6eb;
+        }
+
+        [data-theme="ocean"] {
+            --bg-primary: #e3f2fd;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #bbdefb;
+            --text-primary: #0d47a1;
+            --text-secondary: #1565c0;
+            --text-muted: #1976d2;
+            --accent: #0277bd;
+            --accent-hover: #01579b;
+            --border: #90caf9;
+            --shadow: rgba(13, 71, 161, 0.1);
+            --highlight-weak: #fff9c4;
+            --highlight-weak-text: #f57f17;
+            --success: #00897b;
+            --section-header: #0277bd;
+            --preview-bg: #ffffff;
+            --input-bg: #ffffff;
+        }
+
+        [data-theme="forest"] {
+            --bg-primary: #e8f5e9;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #c8e6c9;
+            --text-primary: #1b5e20;
+            --text-secondary: #2e7d32;
+            --text-muted: #388e3c;
+            --accent: #2e7d32;
+            --accent-hover: #1b5e20;
+            --border: #a5d6a7;
+            --shadow: rgba(27, 94, 32, 0.1);
+            --highlight-weak: #fff8e1;
+            --highlight-weak-text: #ff8f00;
+            --success: #43a047;
+            --section-header: #2e7d32;
+            --preview-bg: #ffffff;
+            --input-bg: #ffffff;
+        }
+
+        [data-theme="lavender"] {
+            --bg-primary: #f3e5f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e1bee7;
+            --text-primary: #4a148c;
+            --text-secondary: #6a1b9a;
+            --text-muted: #7b1fa2;
+            --accent: #7b1fa2;
+            --accent-hover: #6a1b9a;
+            --border: #ce93d8;
+            --shadow: rgba(74, 20, 140, 0.1);
+            --highlight-weak: #fff3e0;
+            --highlight-weak-text: #e65100;
+            --success: #66bb6a;
+            --section-header: #7b1fa2;
+            --preview-bg: #ffffff;
+            --input-bg: #ffffff;
+        }
+
+        [data-theme="midnight"] {
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #12122a;
+            --bg-tertiary: #1a1a3a;
+            --text-primary: #e0e0ff;
+            --text-secondary: #b0b0d0;
+            --text-muted: #8080a0;
+            --accent: #7c3aed;
+            --accent-hover: #8b5cf6;
+            --border: #2a2a4a;
+            --shadow: rgba(0, 0, 0, 0.4);
+            --highlight-weak: #3d2800;
+            --highlight-weak-text: #fbbf24;
+            --success: #34d399;
+            --section-header: #a78bfa;
+            --preview-bg: #12122a;
+            --input-bg: #1a1a3a;
+        }
+
+        [data-theme="contrast"] {
+            --bg-primary: #000000;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e0e0e0;
+            --text-primary: #000000;
+            --text-secondary: #222222;
+            --text-muted: #444444;
+            --accent: #0000ff;
+            --accent-hover: #0000cc;
+            --border: #000000;
+            --shadow: rgba(0, 0, 0, 0.2);
+            --highlight-weak: #ffff00;
+            --highlight-weak-text: #000000;
+            --success: #008000;
+            --section-header: #0000ff;
+            --preview-bg: #ffffff;
+            --input-bg: #ffffff;
+        }
+
+        /* ===== BASE STYLES ===== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ===== HEADER ===== */
+        .hero-header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .hero-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .hero-header h1 .icon {
+            font-size: 1.5rem;
+        }
+
+        .hero-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .offline-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: var(--bg-tertiary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .offline-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== PANELS ===== */
+        .panel {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .panel-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .panel-body {
+            flex: 1;
+            overflow: auto;
+            padding: 1rem;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.5rem 0.85rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            color: white;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+        }
+
+        /* ===== TEXTAREA ===== */
+        .resume-input {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            padding: 1rem;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            border: none;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            resize: none;
+            outline: none;
+        }
+
+        .resume-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* ===== SELECT ===== */
+        .theme-select {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .theme-select:focus {
+            border-color: var(--accent);
+        }
+
+        /* ===== PREVIEW PANE ===== */
+        .preview-pane {
+            background: var(--preview-bg);
+            color: var(--text-primary);
+        }
+
+        .preview-pane.raw-view {
+            white-space: pre-wrap;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+            font-size: 0.875rem;
+        }
+
+        /* Resume Sections */
+        .resume-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .resume-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-header {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--section-header);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.35rem;
+            border-bottom: 2px solid var(--section-header);
+            display: inline-block;
+        }
+
+        .section-content {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .section-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        .section-content ul {
+            margin: 0.5rem 0;
+            padding-left: 1.25rem;
+        }
+
+        .section-content li {
+            margin-bottom: 0.35rem;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 1rem;
+        }
+
+        .item-header {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .item-subheader {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        /* Weak Phrase Highlight */
+        .weak-phrase {
+            background: var(--highlight-weak);
+            color: var(--highlight-weak-text);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            cursor: help;
+            position: relative;
+        }
+
+        .weak-phrase::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+
+        .weak-phrase:hover::after {
+            opacity: 1;
+        }
+
+        /* Skills Tags */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: var(--bg-tertiary);
+            padding: 0.35rem 0.65rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Contact Info */
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--text-muted);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        /* ===== TIPS SECTION ===== */
+        .tips-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .tips-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .tips-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .tip-number {
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .tip-content {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .tip-content strong {
+            color: var(--text-primary);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== LEGEND ===== */
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+
+        .legend-color.weak {
+            background: var(--highlight-weak);
+            border: 1px solid var(--highlight-weak-text);
+        }
+
+        /* ===== TOGGLE SWITCH ===== */
+        .view-toggle {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            padding: 2px;
+        }
+
+        .view-toggle-btn {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .view-toggle-btn.active {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+
+        /* ===== FILE INPUT ===== */
+        .file-input {
+            display: none;
+        }
+
+        /* ===== STATS BAR ===== */
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .hero-header,
+            .input-panel,
+            .tips-section,
+            .footer,
+            .panel-header,
+            .legend,
+            .stats-bar,
+            .toast {
+                display: none !important;
+            }
+
+            .main-container {
+                display: block;
+                padding: 0;
+                max-width: 100%;
+            }
+
+            .preview-panel {
+                box-shadow: none;
+                border: none;
+            }
+
+            .panel-body {
+                padding: 0;
+            }
+
+            .resume-section {
+                break-inside: avoid;
+            }
+
+            .section-header {
+                color: black !important;
+                border-color: black !important;
+            }
+
+            .weak-phrase {
+                background: #ffff00 !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .hero-header {
+                padding: 1rem;
+            }
+
+            .hero-header h1 {
+                font-size: 1.35rem;
+            }
+
+            .main-container {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .panel-header {
+                padding: 0.75rem;
+            }
+
+            .panel-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Hero Header -->
+    <header class="hero-header">
+        <h1>
+            <span class="icon">📄</span>
+            Offline Resume Viewer
+        </h1>
+        <p>See how recruiters actually read your resume — instantly, privately, offline</p>
+        <span class="offline-badge">Works Offline</span>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Input Panel -->
+        <section class="panel input-panel">
+            <div class="panel-header">
+                <span class="panel-title">
+                    📝 Paste Your Resume
+                </span>
+                <div class="panel-controls">
+                    <input type="file" id="fileInput" class="file-input" accept=".txt,.md">
+                    <button class="btn" id="importBtn" title="Import text file">
+                        📁 Import
+                    </button>
+                    <button class="btn" id="exportBtn" title="Export as text file">
+                        💾 Export
+                    </button>
+                    <button class="btn" id="clearBtn" title="Clear content">
+                        🗑️ Clear
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <textarea 
+                    id="resumeInput" 
+                    class="resume-input" 
+                    placeholder="Paste your resume text here...
+
+Example format:
+
+JOHN DOE
+john.doe@email.com | (555) 123-4567 | linkedin.com/in/johndoe
+
+SUMMARY
+Experienced software developer with 5+ years...
+
+SKILLS
+JavaScript, Python, React, Node.js, SQL...
+
+EXPERIENCE
+Senior Developer | Tech Company | 2020 - Present
+• Led development of core platform features
+• Reduced load time by 40% through optimization
+
+EDUCATION
+BS Computer Science | State University | 2018"
+                    spellcheck="false"
+                ></textarea>
+            </div>
+            <div class="stats-bar">
+                <span class="stat-item">Words: <span class="stat-value" id="wordCount">0</span></span>
+                <span class="stat-item">Characters: <span class="stat-value" id="charCount">0</span></span>
+                <span class="stat-item">Lines: <span class="stat-value" id="lineCount">0</span></span>
+                <span class="stat-item">Sections: <span class="stat-value" id="sectionCount">0</span></span>
+            </div>
+        </section>
+
+        <!-- Preview Panel -->
+        <section class="panel preview-panel">
+            <div class="panel-header">
+                <span class="panel-title">
+                    👁️ Preview
+                </span>
+                <div class="panel-controls">
+                    <div class="view-toggle">
+                        <button class="view-toggle-btn active" data-view="formatted">Formatted</button>
+                        <button class="view-toggle-btn" data-view="raw">Raw</button>
+                    </div>
+                    <select id="themeSelect" class="theme-select" title="Select theme">
+                        <option value="light">☀️ Light</option>
+                        <option value="dark">🌙 Dark</option>
+                        <option value="sepia">📜 Sepia</option>
+                        <option value="ocean">🌊 Ocean</option>
+                        <option value="forest">🌲 Forest</option>
+                        <option value="lavender">💜 Lavender</option>
+                        <option value="midnight">🌌 Midnight</option>
+                        <option value="contrast">⬛ High Contrast</option>
+                    </select>
+                    <button class="btn" id="printBtn" title="Print resume">
+                        🖨️ Print
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body" id="previewPane">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📋</div>
+                    <h3>No Resume Content</h3>
+                    <p>Paste your resume text on the left to see the preview</p>
+                </div>
+            </div>
+            <div class="legend">
+                <span class="legend-item">
+                    <span class="legend-color weak"></span>
+                    Weak phrase (hover for suggestion)
+                </span>
+            </div>
+        </section>
+    </main>
+
+    <!-- Tips Section -->
+    <section class="tips-section">
+        <div class="tips-card">
+            <h2 class="tips-title">
+                💡 How Recruiters Read Resumes
+            </h2>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <span class="tip-number">1</span>
+                    <div class="tip-content">
+                        <strong>6-Second Scan:</strong> Recruiters spend ~6 seconds on initial scan. Put key info at the top.
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-number">2</span>
+                    <div class="tip-content">
+                        <strong>F-Pattern Reading:</strong> Eyes move in F-shape. Left side and headers get most attention.
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-number">3</span>
+                    <div class="tip-content">
+                        <strong>Keywords First:</strong> They scan for specific skills and job titles that match the role.
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-number">4</span>
+                    <div class="tip-content">
+                        <strong>Numbers Stand Out:</strong> Quantified achievements (e.g., "increased sales 40%") catch the eye.
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-number">5</span>
+                    <div class="tip-content">
+                        <strong>Avoid Weak Phrases:</strong> Words like "responsible for" or "worked on" are passive and vague.
+                    </div>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-number">6</span>
+                    <div class="tip-content">
+                        <strong>White Space Matters:</strong> Clean formatting and spacing improves readability significantly.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        Made with ❤️ by <a href="https://github.com/Aliriyaj007" target="_blank" rel="noopener">Aliriyaj007</a>
+    </footer>
+
+    <script>
+        // ===== DOM ELEMENTS =====
+        const resumeInput = document.getElementById('resumeInput');
+        const previewPane = document.getElementById('previewPane');
+        const themeSelect = document.getElementById('themeSelect');
+        const fileInput = document.getElementById('fileInput');
+        const importBtn = document.getElementById('importBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const printBtn = document.getElementById('printBtn');
+        const viewToggleBtns = document.querySelectorAll('.view-toggle-btn');
+        const wordCount = document.getElementById('wordCount');
+        const charCount = document.getElementById('charCount');
+        const lineCount = document.getElementById('lineCount');
+        const sectionCount = document.getElementById('sectionCount');
+        const toast = document.getElementById('toast');
+
+        // ===== STATE =====
+        let currentView = 'formatted';
+
+        // ===== WEAK PHRASES =====
+        const weakPhrases = [
+            { phrase: 'responsible for', suggestion: 'Use action verbs like "Led", "Managed", "Delivered"' },
+            { phrase: 'worked on', suggestion: 'Be specific: "Developed", "Designed", "Implemented"' },
+            { phrase: 'helped with', suggestion: 'Quantify impact: "Contributed to X resulting in Y"' },
+            { phrase: 'assisted in', suggestion: 'Specify your role: "Collaborated on", "Supported by"' },
+            { phrase: 'duties included', suggestion: 'Focus on achievements, not duties' },
+            { phrase: 'tasks included', suggestion: 'Highlight results, not just tasks' },
+            { phrase: 'was involved in', suggestion: 'State your direct contribution' },
+            { phrase: 'participated in', suggestion: 'Describe your specific role and impact' },
+            { phrase: 'handled', suggestion: 'Use stronger verbs: "Orchestrated", "Executed"' },
+            { phrase: 'dealt with', suggestion: 'Be specific: "Resolved", "Addressed", "Managed"' },
+            { phrase: 'various', suggestion: 'Be specific about what exactly' },
+            { phrase: 'multiple', suggestion: 'Use exact numbers when possible' },
+            { phrase: 'several', suggestion: 'Quantify: use specific numbers' },
+            { phrase: 'etc.', suggestion: 'Be comprehensive or remove' },
+            { phrase: 'and so on', suggestion: 'Complete the list or summarize better' },
+            { phrase: 'team player', suggestion: 'Show teamwork through examples instead' },
+            { phrase: 'hard worker', suggestion: 'Demonstrate through achievements' },
+            { phrase: 'detail-oriented', suggestion: 'Prove with specific examples' },
+            { phrase: 'self-starter', suggestion: 'Show initiative through accomplishments' },
+            { phrase: 'go-getter', suggestion: 'Replace with concrete achievements' },
+            { phrase: 'think outside the box', suggestion: 'Describe actual innovative solutions' },
+            { phrase: 'synergy', suggestion: 'Use plain language to describe collaboration' },
+            { phrase: 'leverage', suggestion: 'Simply say "use" or be more specific' },
+            { phrase: 'utilized', suggestion: 'Simply say "used"' }
+        ];
+
+        // ===== SECTION PATTERNS =====
+        const sectionPatterns = [
+            { name: 'contact', patterns: ['contact', 'email', 'phone', 'address', 'linkedin', 'github', 'portfolio'] },
+            { name: 'summary', patterns: ['summary', 'objective', 'profile', 'about', 'overview', 'professional summary', 'career objective'] },
+            { name: 'skills', patterns: ['skills', 'technical skills', 'core competencies', 'competencies', 'technologies', 'tools', 'expertise'] },
+            { name: 'experience', patterns: ['experience', 'work experience', 'employment', 'work history', 'professional experience', 'career history'] },
+            { name: 'education', patterns: ['education', 'academic', 'qualifications', 'degrees', 'certifications', 'training'] },
+            { name: 'projects', patterns: ['projects', 'personal projects', 'portfolio', 'key projects'] },
+            { name: 'certifications', patterns: ['certifications', 'licenses', 'credentials', 'certificates'] },
+            { name: 'awards', patterns: ['awards', 'achievements', 'honors', 'recognition'] },
+            { name: 'languages', patterns: ['languages', 'language skills'] },
+            { name: 'interests', patterns: ['interests', 'hobbies', 'activities'] },
+            { name: 'references', patterns: ['references'] },
+            { name: 'publications', patterns: ['publications', 'papers', 'articles'] },
+            { name: 'volunteer', patterns: ['volunteer', 'community', 'volunteering'] }
+        ];
+
+        // ===== UTILITIES =====
+        function showToast(message, duration = 3000) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('resumeContent', resumeInput.value);
+                localStorage.setItem('selectedTheme', themeSelect.value);
+            } catch (e) {
+                console.warn('LocalStorage not available');
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const savedContent = localStorage.getItem('resumeContent');
+                const savedTheme = localStorage.getItem('selectedTheme');
+                
+                if (savedContent) {
+                    resumeInput.value = savedContent;
+                }
+                if (savedTheme) {
+                    themeSelect.value = savedTheme;
+                    document.documentElement.setAttribute('data-theme', savedTheme);
+                }
+            } catch (e) {
+                console.warn('LocalStorage not available');
+            }
+        }
+
+        // ===== RESUME PARSER =====
+        function detectSectionType(line) {
+            const lowerLine = line.toLowerCase().trim();
+            for (const section of sectionPatterns) {
+                for (const pattern of section.patterns) {
+                    if (lowerLine === pattern || 
+                        lowerLine === pattern + ':' || 
+                        lowerLine.startsWith(pattern + ' ') ||
+                        lowerLine.startsWith(pattern + ':')) {
+                        return section.name;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function isHeader(line) {
+            const trimmed = line.trim();
+            if (!trimmed) return false;
+            
+            // Check if all caps (likely a header)
+            if (trimmed === trimmed.toUpperCase() && trimmed.length > 2 && /[A-Z]/.test(trimmed)) {
+                return true;
+            }
+            
+            // Check if matches section pattern
+            if (detectSectionType(line)) {
+                return true;
+            }
+            
+            // Check if ends with colon
+            if (trimmed.endsWith(':') && trimmed.length < 50) {
+                return true;
+            }
+            
+            return false;
+        }
+
+        function highlightWeakPhrases(text) {
+            let result = escapeHtml(text);
+            
+            for (const { phrase, suggestion } of weakPhrases) {
+                const regex = new RegExp(`(${phrase})`, 'gi');
+                result = result.replace(regex, `<span class="weak-phrase" data-tip="${suggestion}">$1</span>`);
+            }
+            
+            return result;
+        }
+
+        function parseResume(text) {
+            if (!text.trim()) {
+                return null;
+            }
+
+            const lines = text.split('\n');
+            const sections = [];
+            let currentSection = { name: 'header', content: [] };
+            let detectedSections = 0;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const trimmedLine = line.trim();
+
+                if (isHeader(trimmedLine)) {
+                    // Save previous section if it has content
+                    if (currentSection.content.length > 0) {
+                        sections.push({ ...currentSection });
+                    }
+                    
+                    // Start new section
+                    const sectionType = detectSectionType(trimmedLine) || 'other';
+                    currentSection = {
+                        name: sectionType,
+                        title: trimmedLine.replace(/[:\s]+$/, ''),
+                        content: []
+                    };
+                    detectedSections++;
+                } else {
+                    currentSection.content.push(line);
+                }
+            }
+
+            // Don't forget the last section
+            if (currentSection.content.length > 0) {
+                sections.push(currentSection);
+            }
+
+            return { sections, detectedSections };
+        }
+
+        function formatSkills(content) {
+            const text = content.join(' ').trim();
+            // Split by common delimiters
+            const skills = text.split(/[,;|•·●○►▪▸◦‣⁃]|\s{2,}/)
+                .map(s => s.trim())
+                .filter(s => s && s.length > 1);
+            
+            if (skills.length > 1) {
+                return `<div class="skills-container">${skills.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')}</div>`;
+            }
+            return formatContent(content);
+        }
+
+        function formatContent(content) {
+            let html = '';
+            let inList = false;
+            
+            for (const line of content) {
+                const trimmed = line.trim();
+                if (!trimmed) {
+                    if (inList) {
+                        html += '</ul>';
+                        inList = false;
+                    }
+                    continue;
+                }
+
+                // Check for bullet points
+                if (/^[-•*►▪▸◦‣⁃○●]\s*/.test(trimmed)) {
+                    if (!inList) {
+                        html += '<ul>';
+                        inList = true;
+                    }
+                    const bulletContent = trimmed.replace(/^[-•*►▪▸◦‣⁃○●]\s*/, '');
+                    html += `<li>${highlightWeakPhrases(bulletContent)}</li>`;
+                } else {
+                    if (inList) {
+                        html += '</ul>';
+                        inList = false;
+                    }
+                    html += `<p>${highlightWeakPhrases(trimmed)}</p>`;
+                }
+            }
+            
+            if (inList) {
+                html += '</ul>';
+            }
+            
+            return html || '<p class="text-muted">No content</p>';
+        }
+
+        function formatHeader(content) {
+            // Extract contact info from first section
+            const contactPatterns = {
+                email: /[\w.-]+@[\w.-]+\.\w+/g,
+                phone: /[\+]?[(]?[0-9]{1,4}[)]?[-\s\./0-9]{7,}/g,
+                linkedin: /linkedin\.com\/in\/[\w-]+/gi,
+                github: /github\.com\/[\w-]+/gi,
+                website: /(?:https?:\/\/)?(?:www\.)?[\w-]+\.[\w.-]+/gi
+            };
+
+            let html = '';
+            const contentText = content.join('\n');
+
+            // First non-empty line is likely the name
+            const name = content.find(l => l.trim())?.trim();
+            if (name) {
+                html += `<h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${escapeHtml(name)}</h2>`;
+            }
+
+            // Extract contact info
+            const contacts = [];
+            const emailMatch = contentText.match(contactPatterns.email);
+            if (emailMatch) contacts.push(`📧 ${emailMatch[0]}`);
+            
+            const phoneMatch = contentText.match(contactPatterns.phone);
+            if (phoneMatch) contacts.push(`📱 ${phoneMatch[0]}`);
+            
+            const linkedinMatch = contentText.match(contactPatterns.linkedin);
+            if (linkedinMatch) contacts.push(`💼 ${linkedinMatch[0]}`);
+            
+            const githubMatch = contentText.match(contactPatterns.github);
+            if (githubMatch) contacts.push(`💻 ${githubMatch[0]}`);
+
+            if (contacts.length > 0) {
+                html += `<div class="contact-info">${contacts.map(c => `<span class="contact-item">${escapeHtml(c)}</span>`).join('')}</div>`;
+            }
+
+            return html;
+        }
+
+        function renderFormattedResume(text) {
+            const parsed = parseResume(text);
+            
+            if (!parsed || parsed.sections.length === 0) {
+                return `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <h3>No Resume Content</h3>
+                        <p>Paste your resume text on the left to see the preview</p>
+                    </div>
+                `;
+            }
+
+            let html = '';
+            
+            for (const section of parsed.sections) {
+                html += '<div class="resume-section">';
+                
+                if (section.name === 'header') {
+                    html += formatHeader(section.content);
+                } else {
+                    const title = section.title || section.name.charAt(0).toUpperCase() + section.name.slice(1);
+                    html += `<div class="section-header">${escapeHtml(title)}</div>`;
+                    html += '<div class="section-content">';
+                    
+                    if (section.name === 'skills') {
+                        html += formatSkills(section.content);
+                    } else {
+                        html += formatContent(section.content);
+                    }
+                    
+                    html += '</div>';
+                }
+                
+                html += '</div>';
+            }
+
+            // Update section count
+            sectionCount.textContent = parsed.detectedSections;
+
+            return html;
+        }
+
+        function updatePreview() {
+            const text = resumeInput.value;
+            
+            if (currentView === 'formatted') {
+                previewPane.innerHTML = renderFormattedResume(text);
+                previewPane.classList.remove('raw-view');
+            } else {
+                previewPane.innerHTML = highlightWeakPhrases(text) || `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <h3>No Resume Content</h3>
+                        <p>Paste your resume text on the left to see the preview</p>
+                    </div>
+                `;
+                previewPane.classList.add('raw-view');
+            }
+
+            // Update stats
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const chars = text.length;
+            const lines = text ? text.split('\n').length : 0;
+
+            wordCount.textContent = words;
+            charCount.textContent = chars;
+            lineCount.textContent = lines;
+
+            // Save to localStorage
+            saveToLocalStorage();
+        }
+
+        // ===== EVENT LISTENERS =====
+        
+        // Resume input changes
+        let debounceTimer;
+        resumeInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(updatePreview, 150);
+        });
+
+        // Theme selector
+        themeSelect.addEventListener('change', (e) => {
+            document.documentElement.setAttribute('data-theme', e.target.value);
+            saveToLocalStorage();
+            showToast(`Theme changed to ${e.target.options[e.target.selectedIndex].text}`);
+        });
+
+        // View toggle
+        viewToggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                viewToggleBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentView = btn.dataset.view;
+                updatePreview();
+            });
+        });
+
+        // Import button
+        importBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    resumeInput.value = event.target.result;
+                    updatePreview();
+                    showToast(`Imported: ${file.name}`);
+                };
+                reader.onerror = () => {
+                    showToast('Error reading file');
+                };
+                reader.readAsText(file);
+            }
+            fileInput.value = ''; // Reset for same file selection
+        });
+
+        // Export button
+        exportBtn.addEventListener('click', () => {
+            const text = resumeInput.value;
+            if (!text.trim()) {
+                showToast('Nothing to export');
+                return;
+            }
+
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resume.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Resume exported successfully!');
+        });
+
+        // Clear button
+        clearBtn.addEventListener('click', () => {
+            if (resumeInput.value && confirm('Are you sure you want to clear the resume?')) {
+                resumeInput.value = '';
+                updatePreview();
+                showToast('Resume cleared');
+            }
+        });
+
+        // Print button
+        printBtn.addEventListener('click', () => {
+            window.print();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + S to save/export
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                exportBtn.click();
+            }
+            // Ctrl/Cmd + P to print
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                printBtn.click();
+            }
+        });
+
+        // ===== INITIALIZATION =====
+        function init() {
+            loadFromLocalStorage();
+            updatePreview();
+            
+            // Register service worker for offline support
+            if ('serviceWorker' in navigator) {
+                // For a single-file app, we'll use cache API directly
+                // This ensures the page works offline after first load
+                caches.open('resume-viewer-v1').then(cache => {
+                    cache.add(window.location.href);
+                });
+            }
+
+            console.log('📄 Offline Resume Viewer initialized');
+            console.log('💡 Tip: Press Ctrl+S to export, Ctrl+P to print');
+        }
+
+        // Run on load
+        init();
+    </script>
+</body>
+</html>
